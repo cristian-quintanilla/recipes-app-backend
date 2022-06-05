@@ -1,0 +1,11 @@
+{
+  "name": "recipes-app-backend",
+  "version": "1.0.0",
+  "description": "Backend for Recipes App",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cristian Quintanilla <cristian.quintanilla.mx@gmail.com>",
+  "license": "ISC"
+}
