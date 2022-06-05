@@ -1,0 +1,1 @@
+export { categoriesController } from './CategoriesController';

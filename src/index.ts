@@ -2,6 +2,7 @@ import express from 'express';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 
+import * as routes from './routes';
 import { databaseConnection } from './database/config';
 
 //* Configure environment variables
@@ -19,6 +20,9 @@ app.set('port', process.env.PORT || 4000);
 //* Middlewares
 app.use( express.json() );
 app.use( express.urlencoded({ extended: false }) );
+
+//* Routes
+app.use('/api/v1/categories', routes.categoriesRoutes.router);
 
 //* Listening
 app.listen(app.get('port'), '0.0.0.0', () => {
