@@ -1,5 +1,7 @@
 import { Request, Response } from 'express';
 
+import CategoryModel, { Category } from '../models/Category';
+
 class CategoriesController {
   public async getCategories (_: Request, res: Response) {
     console.log('get categories');
@@ -10,7 +12,21 @@ class CategoriesController {
   }
 
   public async createCategory (req: Request, res: Response) {
-    console.log('create category');
+    try {
+      const { name } = req.body;
+
+      const category: Category = new CategoryModel({
+        name,
+      });
+
+      await category.save();
+      res.status(201).json({
+        category,
+        message: 'Category created successfully',
+      });
+    } catch (err) {
+      res.status(500).json({ msg: 'An error ocurred while creating the category.' });
+    }
   }
 
   public async updateCategory (req: Request, res: Response) {
