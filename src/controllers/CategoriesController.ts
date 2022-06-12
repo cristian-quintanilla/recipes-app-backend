@@ -9,8 +9,11 @@ class CategoriesController {
         ok: true,
         categories,
       });
-    }).catch(() => {
-      res.status(500).json({ ok: false, msg: 'An error ocurred while getting the categories' });
+    }).catch(err => {
+      res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
     });
   }
 
@@ -22,28 +25,30 @@ class CategoriesController {
       }
 
       res.status(200).json({ ok: true, category });
-    }).catch(() => {
-      res.status(500).json({ ok: false, msg: 'An error ocurred while getting the category' });
+    }).catch(err => {
+      res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
     });
   }
 
   public async createCategory(req: Request, res: Response) {
-    try {
-      const { name } = req.body;
+    const { name } = req.body;
 
-      const category: Category = new CategoryModel({
-        name,
-      });
-
-      await category.save();
+    CategoryModel.create({
+      name,
+    }).then(category => {
       res.status(201).json({
-        category,
         ok: true,
-        msg: 'Category created successfully',
+        category,
       });
-    } catch (err) {
-      res.status(500).json({ ok: false, msg: 'An error ocurred while creating the category' });
-    }
+    }).catch(err => {
+      res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
+    });
   }
 
   public async updateCategory(req: Request, res: Response) {
@@ -57,13 +62,33 @@ class CategoriesController {
         msg: 'Category updated successfully',
         category,
       });
-    }).catch(() => {
-      res.status(500).json({ ok: false, msg: 'An error ocurred while updating the category' });
+    }).catch(err => {
+      res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
     });
   }
 
   public async deleteCategory(req: Request, res: Response) {
-    console.log('delete category');
+    const { id } = req.params;
+
+    CategoryModel.findByIdAndRemove(id).exec().then(category => {
+      if (!category) {
+        return res.status(404).json({ ok: false, msg: 'Category not found' });
+      }
+
+      res.status(200).json({
+        ok: true,
+        msg: 'Category deleted successfully',
+        category,
+      });
+    }).catch(err => {
+      res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
+    });
   }
 }
 
