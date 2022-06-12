@@ -4,7 +4,14 @@ import CategoryModel, { Category } from '../models/Category';
 
 class CategoriesController {
   public async getCategories(_: Request, res: Response) {
-    console.log('get categories');
+    CategoryModel.find().exec().then(categories => {
+      res.json({
+        ok: true,
+        categories,
+      });
+    }).catch(() => {
+      res.status(500).json({ ok: false, msg: 'An error ocurred while getting the categories' });
+    });
   }
 
   public async getCategory(req: Request, res: Response) {
