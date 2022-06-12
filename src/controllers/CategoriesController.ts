@@ -47,7 +47,19 @@ class CategoriesController {
   }
 
   public async updateCategory(req: Request, res: Response) {
-    console.log('update category');
+    const { id } = req.params;
+    const { name } = req.body;
+
+    CategoryModel.findByIdAndUpdate(id, { name }, { new: true }).exec()
+    .then(category => {
+      res.status(200).json({
+        ok: true,
+        msg: 'Category updated successfully',
+        category,
+      });
+    }).catch(() => {
+      res.status(500).json({ ok: false, msg: 'An error ocurred while updating the category' });
+    });
   }
 
   public async deleteCategory(req: Request, res: Response) {
