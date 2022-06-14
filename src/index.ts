@@ -1,4 +1,5 @@
 import express from 'express';
+import validator from 'express-validator';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 
@@ -23,6 +24,7 @@ app.use( express.urlencoded({ extended: false }) );
 
 //* Routes
 app.use('/api/v1/categories', routes.categoriesRoutes.router);
+app.use('/api/v1/users', routes.usersRoutes.router);
 
 //* Listening
 app.listen(app.get('port'), '0.0.0.0', () => {
