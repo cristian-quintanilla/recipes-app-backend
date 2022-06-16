@@ -1,5 +1,4 @@
 import express from 'express';
-import validator from 'express-validator';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 

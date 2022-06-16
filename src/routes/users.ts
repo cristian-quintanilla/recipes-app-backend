@@ -25,8 +25,6 @@ class UsersRoutes {
 			usersController.createUser
 		);
 
-    this.router.get('/:id', usersController.getUser);
-
     this.router.put('/:id',
       [
         check('name', 'The name is required.').not().isEmpty(),
@@ -43,4 +41,3 @@ class UsersRoutes {
 }
 
 export const usersRoutes = new UsersRoutes();
-
