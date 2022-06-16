@@ -16,10 +16,10 @@ class UsersRoutes {
 	config(): void {
 		this.router.post('/create',
 			[
-				check('name', 'The name is required.').not().isEmpty(),
-				check('email', 'Invalid email.').isEmail(),
-				check('password', 'The password is required.').not().isEmpty(),
-				check('password', 'The password must have at least 8 characters.').isLength({ min: 8 }),
+				check('name', 'The name is required').not().isEmpty(),
+				check('email', 'Invalid email').isEmail(),
+				check('password', 'The password is required').not().isEmpty(),
+				check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
 				validateFields,
 			],
 			usersController.createUser
@@ -27,16 +27,37 @@ class UsersRoutes {
 
     this.router.put('/:id',
       [
-        check('name', 'The name is required.').not().isEmpty(),
-        check('email', 'Invalid email.').isEmail(),
-        check('password', 'The password is required.').not().isEmpty(),
-        check('password', 'The password must have at least 8 characters.').isLength({ min: 8 }),
+				check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),
+        check('name', 'The name is required').not().isEmpty(),
+        check('email', 'Invalid email').isEmail(),
         validateFields,
       ],
       usersController.editUser
     );
 
-    this.router.delete('/:id', usersController.deleteUser);
+		this.router.put('/update-password/:id',
+			[
+				check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),
+				check('password', 'The password is required').not().isEmpty(),
+				check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
+				validateFields
+			],
+			usersController.updatePassword
+		);
+
+		this.router.put('/update-image/:id',
+			[
+				check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),
+				check('image', 'The Image Url is required').not().isEmpty(),
+				validateFields
+			],
+			usersController.updateImageUrl
+		);
+
+    this.router.delete('/:id', [
+			check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),
+			validateFields
+		], usersController.deleteUser);
 	}
 }
 
