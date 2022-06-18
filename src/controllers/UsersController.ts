@@ -1,11 +1,12 @@
 import { Request, Response } from 'express';
 import bcryptjs from 'bcryptjs';
 
-import UserModel, { User } from '../models/User';
+import UserModel from '../models/User';
+import { User } from '../interfaces';
 
 class UsersController {
-  public async createUser(req: Request, res: Response) {
-    const { name, email, password } = req.body;
+  public async createUser(userData: User, res: Response) {
+    const { name, email, password } = userData;
 
     // Check if the Email already exists
     const user = await UserModel.findOne({ email });
@@ -22,8 +23,8 @@ class UsersController {
       name,
       email,
       password: newPassword,
-    }).then(() => {
-      res.status(201).json({ ok: true, mgs: 'User created successfully.' });
+    }).then(user => {
+      return (user._id as string);
     }).catch(err => {
       res.status(500).json({ ok: false, msg: err.message });
     });

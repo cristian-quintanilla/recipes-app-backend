@@ -2,7 +2,7 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 
 import { authController } from '../controllers/AuthController';
-import validate from '../middlewares/validate';
+import validateFields from '../middlewares/validate';
 
 // TODO: Auth Middleware
 class AuthRoutes {
@@ -19,12 +19,21 @@ class AuthRoutes {
         check('email', 'Email is not valid').isEmail(),
 				check('password', 'The password is required').not().isEmpty(),
 				check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
-        validate,
+        validateFields,
       ],
       authController.login
     );
 
-    this.router.post('/register', authController.register);
+    this.router.post('/register',
+      [
+        check('name', 'The name is required').not().isEmpty(),
+        check('email', 'Invalid email').isEmail(),
+        check('password', 'The password is required').not().isEmpty(),
+        check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
+        validateFields,
+      ],
+      authController.register
+    );
 
     this.router.get('/me', authController.getMe);
   }

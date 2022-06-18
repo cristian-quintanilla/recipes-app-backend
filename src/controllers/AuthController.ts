@@ -2,8 +2,9 @@ import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 
 import UserModel from '../models/User';
-import { DataStoredInToken } from '../interfaces/token';
 import generateJWT from '../utils/generate-jwt';
+import { DataStoredInToken, User } from '../interfaces';
+import { usersController } from './UsersController';
 
 class AuthController {
   public async login(req: Request, res: Response) {
@@ -40,7 +41,27 @@ class AuthController {
   }
 
   public async register(req: Request, res: Response) {
-    console.log('register');
+    const { name, email, password } = req.body;
+		const newUser: User = {
+			name,
+			email,
+			password
+		}
+
+		// Get user id
+		const userId = await usersController.createUser(newUser, res);
+
+		// Create and assign a token
+		const payload: DataStoredInToken = {
+			user: {
+				_id: (userId as unknown as string),
+				name,
+				email,
+			}
+		}
+
+		const token = await generateJWT(payload);
+		res.status(201).json({ token });
   }
 
   public async getMe(req: Request, res: Response) {

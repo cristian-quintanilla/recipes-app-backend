@@ -15,3 +15,9 @@ export interface RequestWithUser extends Request {
     email: string;
 	},
 }
+
+export interface User {
+  name: string;
+	email: string;
+	password: string;
+}

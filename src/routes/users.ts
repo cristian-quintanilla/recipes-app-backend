@@ -14,17 +14,6 @@ class UsersRoutes {
 	}
 
 	config(): void {
-		this.router.post('/create',
-			[
-				check('name', 'The name is required').not().isEmpty(),
-				check('email', 'Invalid email').isEmail(),
-				check('password', 'The password is required').not().isEmpty(),
-				check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
-				validateFields,
-			],
-			usersController.createUser
-		);
-
     this.router.put('/:id',
       [
 				check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),

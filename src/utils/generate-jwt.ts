@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 
-import { DataStoredInToken } from '../interfaces/token';
+import { DataStoredInToken } from '../interfaces';
 
 function generateJWT(payload: DataStoredInToken) {
 	return new Promise((resolve, reject) => {
