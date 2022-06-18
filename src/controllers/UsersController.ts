@@ -97,7 +97,13 @@ class UsersController {
   }
 
   public deleteUser(req: Request, res: Response) {
-    console.log('deleteUser');
+    const { id } = req.params;
+
+    UserModel.findByIdAndDelete(id).then(() => {
+      res.status(200).json({ ok: true, msg: 'User deleted successfully.' });
+    }).catch(err => {
+      res.status(500).json({ ok: false, msg: err.message });
+    });
   }
 }
 
