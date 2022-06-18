@@ -1,10 +1,10 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import { authController } from '../controllers/AuthController';
+import authMiddleware from '../middlewares/auth';
 import validateFields from '../middlewares/validate';
+import { authController } from '../controllers/AuthController';
 
-// TODO: Auth Middleware
 class AuthRoutes {
   public router: Router = Router();
 
@@ -35,7 +35,10 @@ class AuthRoutes {
       authController.register
     );
 
-    this.router.get('/me', authController.getMe);
+    this.router.get('/me',
+      authMiddleware,
+      authController.getMe
+    );
   }
 }
 

@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import CategoryModel, { Category } from '../models/Category';
+import CategoryModel from '../models/Category';
 
 class CategoriesController {
   public async getCategories(_: Request, res: Response) {

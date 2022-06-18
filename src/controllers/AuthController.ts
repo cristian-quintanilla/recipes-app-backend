@@ -1,10 +1,9 @@
 import { Request, Response } from 'express';
-import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 
 import UserModel from '../models/User';
 import generateJWT from '../utils/generate-jwt';
-import { DataStoredInToken, User } from '../interfaces';
-import { usersController } from './UsersController';
+import { DataStoredInToken, RequestWithUser, User } from '../interfaces';
 
 class AuthController {
   public async login(req: Request, res: Response) {
@@ -19,7 +18,7 @@ class AuthController {
 			}
 
 			// Verify if the password is correct
-			const passwordCorrect = await bcrypt.compare(password, user.password);
+			const passwordCorrect = await bcryptjs.compare(password, user.password);
 			if (!passwordCorrect) {
 				return res.status(400).json({ msg: 'Password is incorrect.' });
 			}
@@ -36,36 +35,52 @@ class AuthController {
 			const token = await generateJWT(payload);
 			res.status(201).json({ token });
 		} catch (err) {
-			return res.status(401).json({ msg: 'Unauthorized user.' });
+			return res.status(500).json({ ok: false, msg: 'Error on the server.' });
 		}
   }
 
   public async register(req: Request, res: Response) {
-    const { name, email, password } = req.body;
-		const newUser: User = {
-			name,
-			email,
-			password
-		}
+		const { name, email, password } = req.body;
 
-		// Get user id
-		const userId = await usersController.createUser(newUser, res);
+    // Check if the Email already exists
+    const user = await UserModel.findOne({ email });
+    if (user) {
+      return res.status(400).json({ ok: false, msg: 'E-mail is already in use' });
+    }
 
-		// Create and assign a token
-		const payload: DataStoredInToken = {
-			user: {
-				_id: (userId as unknown as string),
-				name,
-				email,
+    // Encrypt the password
+    const salt = await bcryptjs.genSalt();
+    const newPassword = await bcryptjs.hash(password, salt);
+
+    // Create the user
+    UserModel.create({
+      name,
+      email,
+      password: newPassword,
+    }).then(async (user) => {
+			// Create and assign a token
+			const payload: DataStoredInToken = {
+				user: {
+					_id: user._id,
+					name,
+					email,
+				}
 			}
-		}
 
-		const token = await generateJWT(payload);
-		res.status(201).json({ token });
+			const token = await generateJWT(payload);
+			res.status(200).json({ ok: true, msg: 'User created successfully', token });
+    }).catch(err => {
+      res.status(500).json({ ok: false, msg: err.message });
+    });
   }
 
-  public async getMe(req: Request, res: Response) {
-    console.log('me');
+  public async getMe(req: RequestWithUser, res: Response) {
+		try {
+			const user = await UserModel.findById(req.user?._id).select('_id name email');
+			res.json({ user });
+		} catch (err) {
+			res.status(404).send({ msg: 'User not found.' });
+		}
   }
 }
 
