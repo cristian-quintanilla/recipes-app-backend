@@ -24,6 +24,7 @@ app.use( express.urlencoded({ extended: false }) );
 //* Routes
 app.use('/api/v1/categories', routes.categoriesRoutes.router);
 app.use('/api/v1/users', routes.usersRoutes.router);
+app.use('/api/v1/auth', routes.authRoutes.router);
 
 //* Listening
 app.listen(app.get('port'), '0.0.0.0', () => {
