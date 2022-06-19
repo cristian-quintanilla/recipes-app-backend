@@ -1,6 +1,8 @@
-import { Request, Response } from 'express';
+import { Request, RequestHandler, Response } from 'express';
 
 import CategoryModel from '../models/Category';
+import { getUser } from '../middlewares/auth';
+import { RequestWithUser } from '../interfaces/index';
 
 class CategoriesController {
   public async getCategories(_: Request, res: Response) {
@@ -34,10 +36,12 @@ class CategoriesController {
   }
 
   public async createCategory(req: Request, res: Response) {
-    const { name } = req.body;
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
 
     CategoryModel.create({
-      name,
+      name: req.body.name,
+      user: user?._id
     }).then(category => {
       res.status(201).json({
         ok: true,

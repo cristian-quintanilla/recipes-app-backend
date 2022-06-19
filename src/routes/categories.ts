@@ -1,10 +1,9 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-// TODO: Auth Middleware
-
-import { categoriesController } from '../controllers';
 import validateFields from '../middlewares/validate';
+import { authMiddleware } from '../middlewares/auth';
+import { categoriesController } from '../controllers';
 
 class CategoriesRoutes {
   public router: Router = Router();
@@ -14,25 +13,25 @@ class CategoriesRoutes {
   }
 
   config() {
-    this.router.get('/', categoriesController.getCategories);
+    this.router.get('/', authMiddleware, categoriesController.getCategories);
 
-    this.router.get('/:id', categoriesController.getCategory);
+    this.router.get('/:id', authMiddleware, categoriesController.getCategory);
 
-    this.router.post(
-      '/',
+    this.router.post('/',
       [
         check('name', 'Name is required').not().isEmpty(),
         validateFields
       ],
+      authMiddleware,
       categoriesController.createCategory
     );
 
-    this.router.put(
-      '/:id',
+    this.router.put('/:id',
       [
         check('name', 'Name is required').not().isEmpty(),
         validateFields
       ],
+      authMiddleware,
       categoriesController.updateCategory
     );
 

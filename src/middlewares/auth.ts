@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 
 import { DataStoredInToken, RequestWithUser } from '../interfaces';
 
-export default (req: RequestWithUser, res: Response, next: NextFunction) => {
+const validateToken = (req: RequestWithUser, res: Response) => {
 	// Read token from the header
 	const token = <string>req.header('x-auth-token');
 
@@ -15,11 +15,29 @@ export default (req: RequestWithUser, res: Response, next: NextFunction) => {
 		 });
 	}
 
+	return token;
+}
+
+export const authMiddleware = (req: RequestWithUser, res: Response, next: NextFunction) => {
+	const token = validateToken(req, res) as string;
+
 	// Validate the token
 	try {
 		const decoded = jwt.verify(token, <string>process.env.JWT_SECRET) as DataStoredInToken;
     req.user = decoded.user;
 		next();
+	} catch (err) {
+		res.status(401).json({ msg: 'Token is not valid.' });
+	}
+}
+
+export const getUser = (req: RequestWithUser, res: Response) => {
+	const token = validateToken(req, res) as string;
+
+	// Validate the token
+	try {
+		const decoded = jwt.verify(token, <string>process.env.JWT_SECRET) as DataStoredInToken;
+    return decoded.user;
 	} catch (err) {
 		res.status(401).json({ msg: 'Token is not valid.' });
 	}

@@ -1,8 +1,8 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-import authMiddleware from '../middlewares/auth';
 import validateFields from '../middlewares/validate';
+import { authMiddleware } from '../middlewares/auth';
 import { authController } from '../controllers/AuthController';
 
 class AuthRoutes {
