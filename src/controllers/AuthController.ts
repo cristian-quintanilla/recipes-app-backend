@@ -14,7 +14,7 @@ class AuthController {
 			let user = await UserModel.findOne({ email });
 
       if (!user) {
-				return res.status(400).json({ ok: false, msg: 'The user does not exist' });
+				return res.status(400).json({ ok: false, msg: 'User not found with that Email' });
 			}
 
 			// Verify if the password is correct

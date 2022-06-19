@@ -35,7 +35,7 @@ class CategoriesRoutes {
       categoriesController.updateCategory
     );
 
-    this.router.delete('/:id', categoriesController.deleteCategory);
+    this.router.delete('/:id', authMiddleware, categoriesController.deleteCategory);
   }
 }
 

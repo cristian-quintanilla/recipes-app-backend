@@ -112,6 +112,10 @@ class CategoriesController {
       });
     });
   }
+
+  public async deleteCategoriesByUser(userId: string) {
+    return CategoryModel.deleteMany({ user: userId }).exec();
+  }
 }
 
 export const categoriesController = new CategoriesController();

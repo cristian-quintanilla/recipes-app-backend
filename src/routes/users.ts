@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import { check } from 'express-validator';
 
-// TODO: Auth Middleware
-
 import validateFields from '../middlewares/validate';
+import { authMiddleware } from '../middlewares/auth';
 import { usersController } from '../controllers';
 
 class UsersRoutes {
@@ -14,39 +13,27 @@ class UsersRoutes {
 	}
 
 	config(): void {
-    this.router.put('/:id',
+    this.router.put('/edit',
       [
-				check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),
         check('name', 'The name is required').not().isEmpty(),
-        check('email', 'Invalid email').isEmail(),
+				check('image', 'The Image Url is required').not().isEmpty(),
         validateFields,
       ],
+			authMiddleware,
       usersController.editUser
     );
 
-		this.router.put('/update-password/:id',
+		this.router.put('/update-password',
 			[
-				check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),
 				check('password', 'The password is required').not().isEmpty(),
 				check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
 				validateFields
 			],
+			authMiddleware,
 			usersController.updatePassword
 		);
 
-		this.router.put('/update-image/:id',
-			[
-				check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),
-				check('image', 'The Image Url is required').not().isEmpty(),
-				validateFields
-			],
-			usersController.updateImageUrl
-		);
-
-    this.router.delete('/:id', [
-			check('id').isMongoId().withMessage('Invalid ID: Must be a valid Mongo ID'),
-			validateFields
-		], usersController.deleteUser);
+    this.router.delete('/delete', authMiddleware, usersController.deleteUser);
 	}
 }
 
