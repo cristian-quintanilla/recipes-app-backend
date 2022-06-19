@@ -5,8 +5,14 @@ import { getUser } from '../middlewares/auth';
 import { RequestWithUser } from '../interfaces/index';
 
 class CategoriesController {
-  public async getCategories(_: Request, res: Response) {
-    CategoryModel.find().exec().then(categories => {
+  public async getCategories(req: Request, res: Response) {
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
+
+    CategoryModel.find({ user: user?._id }).populate({
+      path: 'user',
+      select: '_id name email'
+    }).exec().then(categories => {
       res.json({
         ok: true,
         categories,
@@ -21,9 +27,21 @@ class CategoriesController {
 
   public async getCategory(req: Request, res: Response) {
     const { id } = req.params;
-    CategoryModel.findById(id).exec().then(category => {
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
+
+    CategoryModel.findById(id).populate({
+      path: 'user',
+      select: '_id name email'
+    }).exec().then(category => {
+      // Category does not exist
       if (!category) {
         return res.status(404).json({ ok: false, msg: 'Category not found' });
+      }
+
+      // Check if the user is the owner of the category
+      if (category?.user._id.toString() !== user?._id) {
+        return res.status(403).json({ ok: false, msg: 'Forbidden' });
       }
 
       res.status(200).json({ ok: true, category });
