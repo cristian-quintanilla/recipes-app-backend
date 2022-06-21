@@ -17,7 +17,38 @@ export interface RequestWithUser extends Request {
 }
 
 export interface User {
+	_id: string;
   name: string;
 	email: string;
 	password: string;
+}
+
+export interface Category {
+	_id: string;
+	name: string;
+  user: User;
+}
+
+export interface Ingredient {
+	quantity: number;
+	name: string;
+}
+
+export interface Step {
+	step: number;
+	description: string;
+}
+
+export interface Recipe {
+	_id: string;
+	name: string;
+  description: string;
+  timePreparation: string;
+  timeCooking: string;
+  servings: number;
+  ingredients: string[];
+  steps: string[];
+  imageUrl?: string;
+  category: Category;
+  user: User;
 }

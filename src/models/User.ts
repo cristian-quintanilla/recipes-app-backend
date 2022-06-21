@@ -4,6 +4,7 @@ interface User extends mongoose.Document {
 	name: string;
 	email: string;
 	password: string;
+	imageUrl?: string;
 }
 
 const UserSchema = new Schema({
@@ -26,7 +27,7 @@ const UserSchema = new Schema({
 	},
   imageUrl: {
     type: String,
-    default: 'https://res.cloudinary.com/dnihaisdg/image/upload/v1655173003/RecipesApp/user-default-image_setj3q.png'
+    default: 'https://res.cloudinary.com/dnihaisdg/image/upload/v1655694955/RecipesApp/Users/user-profile_n1xpld.png'
   }
 }, {
   versionKey: false,

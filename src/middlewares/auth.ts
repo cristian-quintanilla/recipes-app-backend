@@ -19,12 +19,11 @@ const validateToken = (req: RequestWithUser, res: Response) => {
 }
 
 export const authMiddleware = (req: RequestWithUser, res: Response, next: NextFunction) => {
-	const token = validateToken(req, res) as string;
-
-	// Validate the token
 	try {
+		const token = validateToken(req, res) as string;
 		const decoded = jwt.verify(token, <string>process.env.JWT_SECRET) as DataStoredInToken;
-    req.user = decoded.user;
+
+		req.user = decoded.user;
 		next();
 	} catch (err) {
 		res.status(401).json({ msg: 'Token is not valid.' });
@@ -32,12 +31,11 @@ export const authMiddleware = (req: RequestWithUser, res: Response, next: NextFu
 }
 
 export const getUser = (req: RequestWithUser, res: Response) => {
-	const token = validateToken(req, res) as string;
-
-	// Validate the token
 	try {
+		const token = validateToken(req, res) as string;
 		const decoded = jwt.verify(token, <string>process.env.JWT_SECRET) as DataStoredInToken;
-    return decoded.user;
+
+		return decoded.user;
 	} catch (err) {
 		res.status(401).json({ msg: 'Token is not valid.' });
 	}

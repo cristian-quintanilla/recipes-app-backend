@@ -1,8 +1,8 @@
-import { Request, RequestHandler, Response } from 'express';
+import { Request, Response } from 'express';
 
 import CategoryModel from '../models/Category';
 import { getUser } from '../middlewares/auth';
-import { RequestWithUser } from '../interfaces/index';
+import { RequestWithUser } from '../interfaces';
 
 class CategoriesController {
   public async getCategories(req: Request, res: Response) {

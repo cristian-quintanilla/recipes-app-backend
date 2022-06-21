@@ -1,12 +1,10 @@
 import mongoose, { model, Schema } from 'mongoose';
 
+import { User } from '../interfaces';
+
 interface Category extends mongoose.Document {
   name: string;
-  user: {
-		_id: string;
-		name: string;
-    email: string;
-	};
+  user: User;
 }
 
 const CategorySchema = new Schema({
