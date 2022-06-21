@@ -13,16 +13,17 @@ class CategoriesRoutes {
   }
 
   config() {
-    this.router.get('/', authMiddleware, categoriesController.getCategories);
+		this.router.use(authMiddleware);
 
-    this.router.get('/:id', authMiddleware, categoriesController.getCategory);
+    this.router.get('/', categoriesController.getCategories);
+
+    this.router.get('/:id', categoriesController.getCategory);
 
     this.router.post('/',
       [
         check('name', 'Name is required').not().isEmpty(),
         validateFields
       ],
-      authMiddleware,
       categoriesController.createCategory
     );
 
@@ -31,11 +32,10 @@ class CategoriesRoutes {
         check('name', 'Name is required').not().isEmpty(),
         validateFields
       ],
-      authMiddleware,
       categoriesController.updateCategory
     );
 
-    this.router.delete('/:id', authMiddleware, categoriesController.deleteCategory);
+    this.router.delete('/:id', categoriesController.deleteCategory);
   }
 }
 

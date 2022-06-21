@@ -13,13 +13,14 @@ class UsersRoutes {
 	}
 
 	config(): void {
+		this.router.use(authMiddleware);
+
     this.router.put('/edit',
       [
         check('name', 'The name is required').not().isEmpty(),
 				check('image', 'The Image Url is required').not().isEmpty(),
         validateFields,
       ],
-			authMiddleware,
       usersController.editUser
     );
 
@@ -29,11 +30,10 @@ class UsersRoutes {
 				check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
 				validateFields
 			],
-			authMiddleware,
 			usersController.updatePassword
 		);
 
-    this.router.delete('/delete', authMiddleware, usersController.deleteUser);
+    this.router.delete('/delete', usersController.deleteUser);
 	}
 }
 

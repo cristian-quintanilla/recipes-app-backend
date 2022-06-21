@@ -13,9 +13,11 @@ class RecipesRoutes {
   }
 
   config() {
-    this.router.get('/', authMiddleware, recipesController.getRecipes);
+    this.router.use(authMiddleware);
 
-    this.router.get('/:id', authMiddleware, recipesController.getRecipe);
+    this.router.get('/', recipesController.getRecipes);
+
+    this.router.get('/:id', recipesController.getRecipe);
 
     this.router.post('/',
       [
@@ -35,7 +37,6 @@ class RecipesRoutes {
         check('categoryId', 'Invalid Mongo ID').isMongoId(),
         validateFields
       ],
-      authMiddleware,
       recipesController.createRecipe
     );
 
@@ -44,11 +45,10 @@ class RecipesRoutes {
       //   check('name', 'Name is required').not().isEmpty(),
       //   validateFields
       // ],
-      authMiddleware,
       recipesController.updateRecipe
     );
 
-    this.router.delete('/:id', authMiddleware, recipesController.deleteRecipe);
+    this.router.delete('/:id', recipesController.deleteRecipe);
   }
 }
 
