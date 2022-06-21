@@ -41,7 +41,7 @@ const RecipeSchema = new Schema({
     required: true,
   },
   ingredients: [{
-    quantity: Number,
+    quantity: String,
     name: String,
   }],
   steps: [{
