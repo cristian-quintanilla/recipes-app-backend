@@ -17,7 +17,13 @@ class RecipesRoutes {
 
     this.router.get('/', recipesController.getRecipes);
 
-    this.router.get('/:id', recipesController.getRecipe);
+    this.router.get('/:id',
+      [
+        check('id', 'Invalid Mongo ID').isMongoId(),
+        validateFields
+      ],
+      recipesController.getRecipe
+    );
 
     this.router.post('/',
       [

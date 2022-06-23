@@ -7,11 +7,66 @@ import { RequestWithUser } from '../interfaces';
 
 class RecipesController {
   public async getRecipes(req: Request, res: Response) {
-    console.log('get recipes');
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
+
+    RecipeModel.find({ user: user?._id }).populate([
+      {
+        path: 'category',
+        select: 'name'
+      },
+      {
+        path: 'user',
+        select: 'name email'
+      }
+    ]).exec().then(recipes => {
+      res.status(200).json({
+        ok: true,
+        recipes,
+      });
+    }).catch(err => {
+      res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
+    });
   }
 
   public async getRecipe(req: Request, res: Response) {
-    console.log('get recipe');
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
+
+    const { id } = req.params;
+
+    RecipeModel.findById(id).populate([
+      {
+        path: 'category',
+        select: 'name'
+      },
+      {
+        path: 'user',
+        select: 'name email'
+      }
+    ]).exec().then(recipe => {
+      // Recipe does not exist
+      if (!recipe) {
+        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+      }
+
+      if (recipe?.user._id.toString() !== user?._id) {
+        return res.status(403).json({ ok: false, msg: 'Forbidden' });
+      }
+
+      res.status(200).json({
+        ok: true,
+        recipe,
+      });
+    }).catch(err => {
+      res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
+    });
   }
 
   public async createRecipe(req: Request, res: Response) {
@@ -44,31 +99,28 @@ class RecipesController {
         return res.status(403).json({ ok: false, msg: 'Forbidden' });
       }
 
-      // Check if the user is the owner of the category
-      if (category?.user._id.toString() === user?._id) {
-        RecipeModel.create({
-          name,
-          description,
-          timePreparation,
-          timeCooking,
-          servings,
-          ingredients,
-          steps,
-          imageUrl,
-          category: categoryId,
-          user: user?._id
-        }).then(recipe => {
-          res.status(201).json({
-            ok: true,
-            recipe,
-          });
-        }).catch(err => {
-          res.status(500).json({
-            ok: false,
-            msg: err.message
-          });
+      RecipeModel.create({
+        name,
+        description,
+        timePreparation,
+        timeCooking,
+        servings,
+        ingredients,
+        steps,
+        imageUrl,
+        category: categoryId,
+        user: user?._id
+      }).then(recipe => {
+        res.status(201).json({
+          ok: true,
+          recipe,
         });
-      }
+      }).catch(err => {
+        res.status(500).json({
+          ok: false,
+          msg: err.message
+        });
+      });
     });
   }
 
