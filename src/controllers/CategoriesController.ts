@@ -116,6 +116,12 @@ class CategoriesController {
   public async deleteCategoriesByUser(userId: string) {
     return CategoryModel.deleteMany({ user: userId }).exec();
   }
+
+  // Validate if the user is the owner of the category
+  public async validateCategory(categoryId: string, userId: string) {
+    const isOwner = await CategoryModel.findById(categoryId).where('user').equals(userId).exec();
+    return isOwner;
+  }
 }
 
 export const categoriesController = new CategoriesController();

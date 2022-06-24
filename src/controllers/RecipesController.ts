@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 
-import CategoryModel from '../models/Category';
 import RecipeModel from '../models/Recipe';
+import { categoriesController } from './CategoriesController';
 import { getUser } from '../middlewares/auth';
 import { RequestWithUser } from '../interfaces';
 
@@ -85,20 +85,11 @@ class RecipesController {
       categoryId,
     } = req.body;
 
-    // Validate if the user is the owner of the category
-    CategoryModel.findById(categoryId).populate({
-      path: 'user',
-      select: '_id name email'
-    }).exec().then(category => {
-      // Category does not exist
-      if (!category) {
-        return res.status(404).json({ ok: false, msg: 'Category not found' });
-      }
+    const isOwner = await categoriesController.validateCategory(categoryId, user?._id || '');
 
-      if (category?.user._id.toString() !== user?._id) {
-        return res.status(403).json({ ok: false, msg: 'Forbidden' });
-      }
-
+    if (!isOwner) {
+      return res.status(403).json({ ok: false, msg: 'Forbidden' });
+    } else {
       RecipeModel.create({
         name,
         description,
@@ -111,21 +102,67 @@ class RecipesController {
         category: categoryId,
         user: user?._id
       }).then(recipe => {
-        res.status(201).json({
+        return res.status(201).json({
           ok: true,
+          msg: 'Recipe created successfully',
           recipe,
         });
       }).catch(err => {
-        res.status(500).json({
+        return res.status(500).json({
           ok: false,
           msg: err.message
         });
       });
-    });
+    }
   }
 
   public async updateRecipe(req: Request, res: Response) {
-    console.log('update recipe');
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
+
+    const {
+      name,
+      description,
+      timePreparation,
+      timeCooking,
+      servings,
+      ingredients,
+      steps,
+      imageUrl,
+      categoryId,
+    } = req.body;
+
+    const { id } = req.params;
+
+    const isOwner = await categoriesController.validateCategory(categoryId, user?._id || '');
+
+    if (!isOwner) {
+      return res.status(403).json({ ok: false, msg: 'Forbidden' });
+    } else {
+      RecipeModel.findByIdAndUpdate(id, {
+        name,
+        description,
+        timePreparation,
+        timeCooking,
+        servings,
+        ingredients,
+        steps,
+        imageUrl,
+        category: categoryId,
+        user: user?._id
+      }, { new: true }).exec().then(recipe => {
+        return res.status(200).json({
+          ok: true,
+          msg: 'Recipe updated successfully',
+          recipe,
+        });
+      }).catch(err => {
+        return res.status(500).json({
+          ok: false,
+          msg: err.message
+        });
+      });
+    }
   }
 
   public async deleteRecipe(req: Request, res: Response) {
