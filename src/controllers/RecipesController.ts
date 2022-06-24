@@ -38,6 +38,7 @@ class RecipesController {
 
     const { id } = req.params;
 
+    // TODO: Refactor this
     RecipeModel.findById(id).populate([
       {
         path: 'category',
@@ -48,13 +49,12 @@ class RecipesController {
         select: 'name email'
       }
     ]).exec().then(recipe => {
-      // Recipe does not exist
-      if (!recipe) {
-        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
-      }
-
       if (recipe?.user._id.toString() !== user?._id) {
         return res.status(403).json({ ok: false, msg: 'Forbidden' });
+      }
+
+      if (!recipe) {
+        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
       }
 
       res.status(200).json({
@@ -166,7 +166,36 @@ class RecipesController {
   }
 
   public async deleteRecipe(req: Request, res: Response) {
-    console.log('delete recipe');
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
+    const { id } = req.params;
+
+    // TODO: Refactor this
+    RecipeModel.findById(id).populate([
+      { path: 'category', select: 'name' },
+      { path: 'user', select: 'name email' }
+    ]).exec().then(recipe => {
+      if (!recipe) {
+        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+      }
+
+      if (recipe?.user._id.toString() !== user?._id) {
+        return res.status(403).json({ ok: false, msg: 'Forbidden' });
+      }
+
+      // Delete Recipe
+      RecipeModel.findByIdAndDelete(id).exec().then(() => {
+        res.status(200).json({
+          ok: true,
+          msg: 'Recipe deleted successfully',
+        });
+      });
+    }).catch(err => {
+      res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
+    });
   }
 
   public async deleteRecipesByUser(userId: string) {

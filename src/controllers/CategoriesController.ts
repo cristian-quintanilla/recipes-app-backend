@@ -93,14 +93,16 @@ class CategoriesController {
   }
 
   public async deleteCategory(req: Request, res: Response) {
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
     const { id } = req.params;
 
-    CategoryModel.findByIdAndRemove(id).exec().then(category => {
+    CategoryModel.findByIdAndRemove(id).where('user').equals(user?._id).exec().then(category => {
       if (!category) {
-        return res.status(404).json({ ok: false, msg: 'Category not found' });
+        return res.status(404).json({ ok: false, msg: 'Forbidden' });
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         ok: true,
         msg: 'Category deleted successfully',
         category,

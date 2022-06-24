@@ -3,6 +3,7 @@ import bcryptjs from 'bcryptjs';
 
 import UserModel from '../models/User';
 import { categoriesController } from './CategoriesController';
+import { recipesController } from './RecipesController';
 import { getUser } from '../middlewares/auth';
 import { RequestWithUser } from '../interfaces';
 
@@ -60,6 +61,8 @@ class UsersController {
 
     UserModel.findByIdAndDelete(user?._id).then(async () => {
       await categoriesController.deleteCategoriesByUser((user?._id as string));
+      await recipesController.deleteRecipesByUser((user?._id as string));
+
       res.status(200).json({ ok: true, msg: 'User deleted successfully' });
     }).catch(err => {
       res.status(500).json({ ok: false, msg: err.message });
