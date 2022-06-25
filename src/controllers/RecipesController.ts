@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 
 import RecipeModel from '../models/Recipe';
-import { categoriesController } from './CategoriesController';
+import validateCategory from '../utils/validate-category';
+import validateRecipe from '../utils/validate-recipe';
 import { getUser } from '../middlewares/auth';
 import { RequestWithUser } from '../interfaces';
 
@@ -10,63 +11,42 @@ class RecipesController {
     const userRequest: RequestWithUser = req as RequestWithUser;
     const user = getUser(userRequest, res);
 
-    RecipeModel.find({ user: user?._id }).populate([
-      {
-        path: 'category',
-        select: 'name'
-      },
-      {
-        path: 'user',
-        select: 'name email'
-      }
-    ]).exec().then(recipes => {
-      res.status(200).json({
+    try {
+      const recipes = await validateRecipe(user?._id || '');
+      return res.status(200).json({
         ok: true,
         recipes,
       });
-    }).catch(err => {
+    } catch (err: any) {
       res.status(500).json({
         ok: false,
-        msg: err.message
+        msg: err
       });
-    });
+    }
   }
 
   public async getRecipe(req: Request, res: Response) {
     const userRequest: RequestWithUser = req as RequestWithUser;
     const user = getUser(userRequest, res);
 
-    const { id } = req.params;
-
-    // TODO: Refactor this
-    RecipeModel.findById(id).populate([
-      {
-        path: 'category',
-        select: 'name'
-      },
-      {
-        path: 'user',
-        select: 'name email'
-      }
-    ]).exec().then(recipe => {
-      if (recipe?.user._id.toString() !== user?._id) {
-        return res.status(403).json({ ok: false, msg: 'Forbidden' });
-      }
+    try {
+      const { id } = req.params;
+      const recipe = await validateRecipe(user?._id || '', id);
 
       if (!recipe) {
         return res.status(404).json({ ok: false, msg: 'Recipe not found' });
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         ok: true,
         recipe,
       });
-    }).catch(err => {
+    } catch (err: any) {
       res.status(500).json({
         ok: false,
-        msg: err.message
+        msg: err
       });
-    });
+    }
   }
 
   public async createRecipe(req: Request, res: Response) {
@@ -85,35 +65,37 @@ class RecipesController {
       categoryId,
     } = req.body;
 
-    const isOwner = await categoriesController.validateCategory(categoryId, user?._id || '');
+    console.log(categoryId, '-', user?._id);
 
-    if (!isOwner) {
-      return res.status(403).json({ ok: false, msg: 'Forbidden' });
-    } else {
-      RecipeModel.create({
-        name,
-        description,
-        timePreparation,
-        timeCooking,
-        servings,
-        ingredients,
-        steps,
-        imageUrl,
-        category: categoryId,
-        user: user?._id
-      }).then(recipe => {
-        return res.status(201).json({
-          ok: true,
-          msg: 'Recipe created successfully',
-          recipe,
-        });
-      }).catch(err => {
-        return res.status(500).json({
-          ok: false,
-          msg: err.message
-        });
-      });
+    const category = await validateCategory(user?._id || '', categoryId);
+
+    if (!category) {
+      return res.status(404).json({ ok: false, msg: 'Category not found' });
     }
+
+    RecipeModel.create({
+      name,
+      description,
+      timePreparation,
+      timeCooking,
+      servings,
+      ingredients,
+      steps,
+      imageUrl,
+      category: categoryId,
+      user: user?._id
+    }).then(recipe => {
+      return res.status(201).json({
+        ok: true,
+        msg: 'Recipe created successfully',
+        recipe,
+      });
+    }).catch(err => {
+      return res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
+    });
   }
 
   public async updateRecipe(req: Request, res: Response) {
@@ -133,12 +115,17 @@ class RecipesController {
     } = req.body;
 
     const { id } = req.params;
+    const recipe = await validateRecipe(user?._id || '', id);
 
-    const isOwner = await categoriesController.validateCategory(categoryId, user?._id || '');
-
-    if (!isOwner) {
-      return res.status(403).json({ ok: false, msg: 'Forbidden' });
+    if (!recipe) {
+      return res.status(404).json({ ok: false, msg: 'Recipe not found' });
     } else {
+      const category = await validateCategory(user?._id || '', categoryId);
+
+      if (!category) {
+        return res.status(404).json({ ok: false, msg: 'Category not found' });
+      }
+
       RecipeModel.findByIdAndUpdate(id, {
         name,
         description,
@@ -168,19 +155,13 @@ class RecipesController {
   public async deleteRecipe(req: Request, res: Response) {
     const userRequest: RequestWithUser = req as RequestWithUser;
     const user = getUser(userRequest, res);
-    const { id } = req.params;
 
-    // TODO: Refactor this
-    RecipeModel.findById(id).populate([
-      { path: 'category', select: 'name' },
-      { path: 'user', select: 'name email' }
-    ]).exec().then(recipe => {
+    try {
+      const { id } = req.params;
+      const recipe = await validateRecipe(user?._id || '', id);
+
       if (!recipe) {
         return res.status(404).json({ ok: false, msg: 'Recipe not found' });
-      }
-
-      if (recipe?.user._id.toString() !== user?._id) {
-        return res.status(403).json({ ok: false, msg: 'Forbidden' });
       }
 
       // Delete Recipe
@@ -190,12 +171,12 @@ class RecipesController {
           msg: 'Recipe deleted successfully',
         });
       });
-    }).catch(err => {
+    } catch (err: any) {
       res.status(500).json({
         ok: false,
-        msg: err.message
+        msg: err
       });
-    });
+    }
   }
 
   public async deleteRecipesByUser(userId: string) {

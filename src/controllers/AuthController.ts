@@ -3,9 +3,7 @@ import bcryptjs from 'bcryptjs';
 
 import UserModel from '../models/User';
 import generateJWT from '../utils/generate-jwt';
-import { DataStoredInToken, RequestWithUser, User } from '../interfaces';
-
-// TODO: Refactor this controller
+import { DataStoredInToken, RequestWithUser } from '../interfaces';
 
 class AuthController {
   public async login(req: Request, res: Response) {
