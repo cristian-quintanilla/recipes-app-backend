@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import { config } from 'dotenv';
 import { resolve } from 'path';
 
@@ -8,11 +9,13 @@ import { databaseConnection } from './database/config';
 //* Configure environment variables
 config({ path: resolve(__dirname, '../.env.dev') });
 
-//* Create the express app
+//* Create the express app and connect to the database
 const app = express();
-
-//* Connect to the database
 databaseConnection();
+
+//* Enable CORS Option
+const corsOptions = {	origin: `${ process.env.FRONTEND_URL }` };
+app.use(cors(corsOptions));
 
 //* Settings
 app.set('port', process.env.PORT || 4000);
