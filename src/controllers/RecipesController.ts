@@ -187,7 +187,7 @@ class RecipesController {
     const { id } = req.params;
     const { comment } = req.body;
 
-    if (comment.length > 25) {
+    if (comment.length > 250) {
       return res.status(400).json({
         ok: false,
         msg: 'Comment must be less than 250 characters'
@@ -254,8 +254,13 @@ class RecipesController {
 
     RecipeModel.findById(id).populate([
       { path: 'category', select: 'name' },
-      { path: 'user', select: 'name email' }
+      { path: 'user', select: 'name email' },
+      { path: 'comments.user', select: 'name' }
     ]).exec().then(recipe => {
+      if (!recipe) {
+        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+      }
+
       return res.status(200).json({
         ok: true,
         recipe,
