@@ -61,6 +61,7 @@ const RecipeSchema = new Schema({
     ref: 'User'
   },
 }, {
+  timestamps: true,
   versionKey: false,
 });
 

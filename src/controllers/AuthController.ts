@@ -82,6 +82,9 @@ class AuthController {
 			res.status(404).send({ msg: 'User not found.' });
 		}
   }
+
+	// TODO: Forgot and Reset Password
+	// https://dev.to/cyberwolve/how-to-implement-password-reset-via-email-in-node-js-132m
 }
 
 export const authController = new AuthController();

@@ -65,8 +65,6 @@ class RecipesController {
       categoryId,
     } = req.body;
 
-    console.log(categoryId, '-', user?._id);
-
     const category = await validateCategory(user?._id || '', categoryId);
 
     if (!category) {
@@ -182,6 +180,58 @@ class RecipesController {
   public async deleteRecipesByUser(userId: string) {
     return RecipeModel.deleteMany({ user: userId }).exec();
   }
+
+  //* Public Methods (No Auth)
+  public async getAllRecipes(req: Request, res: Response) {
+    try {
+			const { page, size, search } = req.query;
+
+      let filters = search ? {
+        $or: [
+          { name: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+        ]
+      } : {};
+
+      const recipes = await RecipeModel.find(filters, 'name description imageUrl servings')
+      .limit(Number(size))
+      .skip((Number(page) - 1) * Number(size))
+      .populate([
+        { path: 'category', select: 'name' },
+        { path: 'user', select: 'name email' }
+      ]).sort({ createdAt: -1 });
+
+      return res.status(200).json({
+				totalPages: Math.ceil(recipes.length / Number(size)),
+				currentPage: Number(page),
+        ok: true,
+				recipes,
+			});
+		} catch (err) {
+			res.status(500).json({ ok: false, msg: 'Error while getting recipes' });
+		}
+  }
+
+  public async getOneRecipe(req: Request, res: Response) {
+    const { id } = req.params;
+
+    RecipeModel.findById(id).populate([
+      { path: 'category', select: 'name' },
+      { path: 'user', select: 'name email' }
+    ]).exec().then(recipe => {
+      return res.status(200).json({
+        ok: true,
+        recipe,
+      });
+    }).catch(err => {
+      return res.status(500).json({
+        ok: false,
+        msg: err
+      });
+    });
+  }
+
+  // TODO: Add comments to recipes
 }
 
 export const recipesController = new RecipesController();

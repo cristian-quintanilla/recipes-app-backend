@@ -13,6 +13,11 @@ class RecipesRoutes {
   }
 
   config() {
+    // Public routes (no auth)
+    this.router.get('/public/:id', recipesController.getOneRecipe);
+    this.router.get('/public', recipesController.getAllRecipes);
+
+    // Private routes (only for logged users)
     this.router.use(authMiddleware);
 
     this.router.get('/', recipesController.getRecipes);
