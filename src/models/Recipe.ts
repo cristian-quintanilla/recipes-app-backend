@@ -1,6 +1,6 @@
 import mongoose, { model, Schema } from 'mongoose';
 
-import { Category, Ingredient, Step, User } from '../interfaces';
+import { Category, Comment, Ingredient, Step, User } from '../interfaces';
 
 interface Recipe extends mongoose.Document {
   name: string;
@@ -13,6 +13,7 @@ interface Recipe extends mongoose.Document {
   imageUrl?: string;
   category: Category;
   user: User;
+  comments: Comment[];
 }
 
 const RecipeSchema = new Schema({
@@ -60,6 +61,17 @@ const RecipeSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
   },
+  comments: [{
+    comment: String,
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    },
+  }],
 }, {
   timestamps: true,
   versionKey: false,

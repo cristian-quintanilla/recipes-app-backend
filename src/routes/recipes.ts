@@ -74,6 +74,16 @@ class RecipesRoutes {
     );
 
     this.router.delete('/:id', recipesController.deleteRecipe);
+
+    this.router.post('/comment/:id',
+      [
+        check('id', 'Invalid Mongo ID').isMongoId(),
+        check('comment', 'Comment is required').not().isEmpty(),
+        check('comment', 'Comment must be a string').isString(),
+        validateFields
+      ],
+      recipesController.addComment
+    );
   }
 }
 

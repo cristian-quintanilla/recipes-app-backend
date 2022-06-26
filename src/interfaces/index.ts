@@ -17,10 +17,10 @@ export interface RequestWithUser extends Request {
 }
 
 export interface User {
-	_id: string;
+	_id?: string;
   name: string;
 	email: string;
-	password: string;
+	password?: string;
 }
 
 export interface Category {
@@ -51,4 +51,11 @@ export interface Recipe {
   imageUrl?: string;
   category: Category;
   user: User;
+}
+
+export interface Comment {
+	_id?: string;
+	date?: Date;
+	comment: string;
+	user: string;
 }

@@ -181,6 +181,43 @@ class RecipesController {
     return RecipeModel.deleteMany({ user: userId }).exec();
   }
 
+  public async addComment(req: Request, res: Response) {
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
+    const { id } = req.params;
+    const { comment } = req.body;
+
+    if (comment.length > 25) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'Comment must be less than 250 characters'
+      });
+    }
+
+    RecipeModel.findById(id).exec().then(recipe => {
+      if (!recipe) {
+        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+      }
+
+      recipe.comments.push({
+        user: user?._id!,
+        comment,
+      });
+
+      recipe.save();
+
+      return res.status(200).json({
+        ok: true,
+        msg: 'Comment added successfully',
+      });
+    }).catch(err => {
+      return res.status(500).json({
+        ok: false,
+        msg: err
+      });
+    });
+  }
+
   //* Public Methods (No Auth)
   public async getAllRecipes(req: Request, res: Response) {
     try {
@@ -230,8 +267,6 @@ class RecipesController {
       });
     });
   }
-
-  // TODO: Add comments to recipes
 }
 
 export const recipesController = new RecipesController();
