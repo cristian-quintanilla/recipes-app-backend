@@ -3,6 +3,7 @@ import bcryptjs from 'bcryptjs';
 
 import UserModel from '../models/User';
 import generateJWT from '../utils/generate-jwt';
+import RecipeModel from '../models/Recipe';
 import { DataStoredInToken, RequestWithUser } from '../interfaces';
 
 class AuthController {
@@ -77,14 +78,26 @@ class AuthController {
   public async getMe(req: RequestWithUser, res: Response) {
 		try {
 			const user = await UserModel.findById(req.user?._id).select('_id name email');
-			res.json({ user });
+			return res.status(200).json({ ok: true, user });
 		} catch (err) {
 			res.status(404).send({ msg: 'User not found.' });
 		}
   }
 
-	// TODO: Forgot and Reset Password
-	// https://dev.to/cyberwolve/how-to-implement-password-reset-via-email-in-node-js-132m
+	public async getProfile(req: RequestWithUser, res: Response) {
+		try {
+			const { id } = req.params;
+
+			const user = await UserModel.findById(id).select('_id name email');
+			const lastRecipes = await RecipeModel.find({ user: id }).sort({ createdAt: -1 }).limit(3).populate([
+				{ path: 'category', select: 'name' },
+			]).select('_id name description timePreparation servings imageUrl');
+
+			return res.status(200).json({ ok: true, user, recipes: lastRecipes });
+		} catch (err) {
+			res.status(404).send({ msg: 'User not found.' });
+		}
+	}
 }
 
 export const authController = new AuthController();

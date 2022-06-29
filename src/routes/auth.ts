@@ -39,6 +39,14 @@ class AuthRoutes {
       authMiddleware,
       authController.getMe
     );
+
+    this.router.get('/profile/:id',
+      [
+        check('id', 'Invalid Mongo ID').isMongoId(),
+        validateFields,
+      ],
+      authController.getProfile
+    );
   }
 }
 
