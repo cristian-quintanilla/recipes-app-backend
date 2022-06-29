@@ -82,6 +82,14 @@ class RecipesRoutes {
       ],
       recipesController.addComment
     );
+
+    this.router.post('/like/:id',
+      [
+        check('id', 'Invalid Mongo ID').isMongoId(),
+        validateFields
+      ],
+      recipesController.likeRecipe
+    );
   }
 }
 

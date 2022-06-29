@@ -58,3 +58,9 @@ export interface Comment {
 	comment: string;
 	user: string;
 }
+
+export interface Like {
+	_id?: string;
+	date?: Date;
+  user: string;
+}

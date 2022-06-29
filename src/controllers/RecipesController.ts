@@ -218,6 +218,46 @@ class RecipesController {
     });
   }
 
+  public async likeRecipe(req: Request, res: Response) {
+    const userRequest: RequestWithUser = req as RequestWithUser;
+    const user = getUser(userRequest, res);
+    const { id } = req.params;
+
+    RecipeModel.findById(id).exec().then(recipe => {
+      if (!recipe) {
+        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+      }
+
+      // User has already vote
+      if (recipe.likes.some(like => like.user.toString() === user?._id!.toString())) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'You have already voted for this recipe'
+        });
+      }
+
+      // User is same as author
+      if (recipe.user.toString() === user?._id) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'You cannot vote for your own recipe'
+        });
+      }
+
+      // Add like
+      recipe.likes.push({
+        user: user?._id || '',
+      });
+
+      recipe.save();
+
+      return res.status(200).json({
+        ok: true,
+        msg: 'Recipe liked successfully',
+      });
+    });
+  }
+
   //* Public Methods (No Auth)
   public async getAllRecipes(req: Request, res: Response) {
     try {

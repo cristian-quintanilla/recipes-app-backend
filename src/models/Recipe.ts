@@ -1,6 +1,6 @@
 import mongoose, { model, Schema } from 'mongoose';
 
-import { Category, Comment, Ingredient, Step, User } from '../interfaces';
+import { Category, Comment, Ingredient, Like, Step, User } from '../interfaces';
 
 interface Recipe extends mongoose.Document {
   name: string;
@@ -14,6 +14,7 @@ interface Recipe extends mongoose.Document {
   category: Category;
   user: User;
   comments: Comment[];
+  likes: Like[];
 }
 
 const RecipeSchema = new Schema({
@@ -71,6 +72,16 @@ const RecipeSchema = new Schema({
       default: Date.now
     },
   }],
+  likes: [{
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    },
+    date: {
+      type: Date,
+      default: Date.now
+    },
+  }]
 }, {
   timestamps: true,
   versionKey: false,
