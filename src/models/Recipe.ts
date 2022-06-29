@@ -42,7 +42,6 @@ const RecipeSchema = new Schema({
     required: true,
   },
   ingredients: [{
-    quantity: String,
     name: String,
   }],
   steps: [{

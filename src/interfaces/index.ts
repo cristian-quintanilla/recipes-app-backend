@@ -30,7 +30,6 @@ export interface Category {
 }
 
 export interface Ingredient {
-	quantity: string;
 	name: string;
 }
 
