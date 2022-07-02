@@ -14,6 +14,7 @@ class RecipesRoutes {
 
   config() {
     // Public routes (no auth)
+    this.router.get('/public/most-liked', recipesController.getMostLikedRecipes);
     this.router.get('/public/:id', recipesController.getOneRecipe);
     this.router.get('/public', recipesController.getAllRecipes);
 

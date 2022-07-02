@@ -312,6 +312,23 @@ class RecipesController {
       });
     });
   }
+
+  public async getMostLikedRecipes(req: Request, res: Response) {
+    RecipeModel.find().sort({ likes: -1 }).limit(5).populate([
+      { path: 'category', select: 'name' },
+      { path: 'user', select: 'name email' },
+    ]).select('_id name description imageUrl').exec().then(recipes => {
+      return res.status(200).json({
+        ok: true,
+        recipes,
+      });
+    }).catch(err => {
+      return res.status(500).json({
+        ok: false,
+        msg: err
+      });
+    });
+  }
 }
 
 export const recipesController = new RecipesController();
