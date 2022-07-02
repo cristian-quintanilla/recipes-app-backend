@@ -9,7 +9,7 @@ import { RequestWithUser } from '../interfaces';
 
 class UsersController {
   public async editUser(req: Request, res: Response) {
-    const { name, image } = req.body;
+    const { name, image, country, age, favoriteRecipe } = req.body;
     const userRequest: RequestWithUser = req as RequestWithUser;
     const user = getUser(userRequest, res);
 
@@ -20,8 +20,11 @@ class UsersController {
       return res.status(404).json({ ok: false, msg: 'User not found' });
     } else {
       UserModel.findByIdAndUpdate(user?._id, {
+        imageUrl: image,
         name,
-        imageUrl: image
+        country,
+        age,
+        favoriteRecipe
       }).then(() => {
         res.status(200).json({ ok: true, msg: 'User information updated successfully' });
       }).catch(err => {

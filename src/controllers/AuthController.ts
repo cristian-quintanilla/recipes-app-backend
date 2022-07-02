@@ -76,19 +76,18 @@ class AuthController {
   }
 
   public async getMe(req: RequestWithUser, res: Response) {
-		try {
-			const user = await UserModel.findById(req.user?._id).select('_id name email');
-			return res.status(200).json({ ok: true, user });
-		} catch (err) {
-			res.status(404).send({ msg: 'User not found.' });
-		}
+		UserModel.findById(req.user?._id).select('_id name email imageUrl').exec().then(user => {
+			res.status(200).json({ ok: true, user });
+		}).catch(err => {
+			return res.status(404).send({ msg: 'User not found.' });
+		});
   }
 
 	public async getProfile(req: RequestWithUser, res: Response) {
 		try {
 			const { id } = req.params;
+			const user = await UserModel.findById(id).select('_id name email country age favoriteRecipe imageUrl');
 
-			const user = await UserModel.findById(id).select('_id name email');
 			const lastRecipes = await RecipeModel.find({ user: id }).sort({ createdAt: -1 }).limit(3).populate([
 				{ path: 'category', select: 'name' },
 			]).select('_id name description timePreparation servings imageUrl');

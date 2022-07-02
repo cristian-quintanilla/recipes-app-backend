@@ -21,6 +21,10 @@ export interface User {
   name: string;
 	email: string;
 	password?: string;
+	country?: string;
+	age?: string;
+	favoriteRecipe?: string;
+	imageUrl?: string;
 }
 
 export interface Category {

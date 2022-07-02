@@ -28,7 +28,16 @@ const UserSchema = new Schema({
   imageUrl: {
     type: String,
     default: 'https://res.cloudinary.com/dnihaisdg/image/upload/v1655694955/RecipesApp/Users/user-profile_n1xpld.png'
-  }
+  },
+	country: {
+		type: String,
+	},
+	age: {
+		type: Number,
+	},
+	favoriteRecipe: {
+		type: String,
+	}
 }, {
   versionKey: false,
 });

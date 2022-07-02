@@ -27,6 +27,9 @@ class AuthRoutes {
     this.router.post('/register',
       [
         check('name', 'The name is required').not().isEmpty(),
+				check('name', 'The name must be at least 3 characters').isLength({ min: 3 }),
+				check('name', 'The name must be a string').isString(),
+        check('email', 'Email is required').not().isEmpty(),
         check('email', 'Invalid email').isEmail(),
         check('password', 'The password is required').not().isEmpty(),
         check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
