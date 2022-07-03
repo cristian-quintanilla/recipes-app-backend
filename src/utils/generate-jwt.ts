@@ -8,7 +8,7 @@ function generateJWT(payload: DataStoredInToken) {
 			expiresIn: '48h'
 		}, (err, token) => {
 			if (err) {
-				reject('Error generating token');
+				reject('Error al generar el Token');
 			}
 
 			resolve(token);

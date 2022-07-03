@@ -15,7 +15,16 @@ class RecipesRoutes {
   config() {
     // Public routes (no auth)
     this.router.get('/public/most-liked', recipesController.getMostLikedRecipes);
-    this.router.get('/public/:id', recipesController.getOneRecipe);
+
+    this.router.get('/public/:id',
+      [
+        check('id', 'El ID es requerido').not().isEmpty(),
+        check('id', 'ID no válido').isMongoId(),
+        validateFields,
+      ],
+      recipesController.getOneRecipe
+    );
+
     this.router.get('/public', recipesController.getAllRecipes);
 
     // Private routes (only for logged users)
@@ -25,7 +34,8 @@ class RecipesRoutes {
 
     this.router.get('/:id',
       [
-        check('id', 'Invalid Mongo ID').isMongoId(),
+        check('id', 'El ID es requerido').not().isEmpty(),
+        check('id', 'ID no válido').isMongoId(),
         validateFields
       ],
       recipesController.getRecipe
@@ -33,19 +43,21 @@ class RecipesRoutes {
 
     this.router.post('/',
       [
-        check('name', 'Name is required').not().isEmpty(),
-        check('description', 'Description is required').not().isEmpty(),
-        check('timePreparation', 'Time preparation is required').not().isEmpty(),
-        check('timeCooking', 'Time cooking is required').not().isEmpty(),
-        check('servings', 'Servings is required').not().isEmpty(),
-        check('servings', 'Servings must be a number').isNumeric(),
-        check('ingredients', 'Ingredients are required').not().isEmpty(),
-        check('ingredients.*.name', 'Ingredient name is required').not().isEmpty(),
-        check('steps', 'Steps are required').not().isEmpty(),
-        check('steps.*.step', 'Step is required').not().isEmpty(),
-        check('steps.*.description', 'Step description is required').not().isEmpty(),
-        check('categoryId', 'Category is required').not().isEmpty(),
-        check('categoryId', 'Invalid Mongo ID').isMongoId(),
+        check('name', 'El nombre es requerido').not().isEmpty(),
+				check('name', 'El nombre debe de tener al menos 3 caracteres').isLength({ min: 3 }),
+        check('description', 'La descripción es requerida').not().isEmpty(),
+				check('description', 'La descripción debe de tener al menos 25 caracteres').isLength({ min: 25 }),
+        check('timePreparation', 'El tiempo de preparación es requerido').not().isEmpty(),
+        check('timeCooking', 'El tiempo de cocción es requerido').not().isEmpty(),
+        check('servings', 'Las porciones son requeridas').not().isEmpty(),
+        check('servings', 'Las porciones deben de ser un número').isNumeric(),
+        check('ingredients', 'Los ingredientes son requeridos').not().isEmpty(),
+        check('ingredients.*.name', 'El nombre del ingrediente es requerido').not().isEmpty(),
+        check('steps', 'Los pasos son requeridos').not().isEmpty(),
+        check('steps.*.step', 'El número de paso es requerido').not().isEmpty(),
+        check('steps.*.description', 'La descripción del paso es requerida').not().isEmpty(),
+        check('categoryId', 'La categoría es requerida').not().isEmpty(),
+        check('categoryId', 'El ID de la categoría no es válido').isMongoId(),
         validateFields
       ],
       recipesController.createRecipe
@@ -53,20 +65,23 @@ class RecipesRoutes {
 
     this.router.put('/:id',
       [
-        check('id', 'Invalid Mongo ID').isMongoId(),
-        check('name', 'Name is required').not().isEmpty(),
-        check('description', 'Description is required').not().isEmpty(),
-        check('timePreparation', 'Time preparation is required').not().isEmpty(),
-        check('timeCooking', 'Time cooking is required').not().isEmpty(),
-        check('servings', 'Servings is required').not().isEmpty(),
-        check('servings', 'Servings must be a number').isNumeric(),
-        check('ingredients', 'Ingredients are required').not().isEmpty(),
-        check('ingredients.*.name', 'Ingredient name is required').not().isEmpty(),
-        check('steps', 'Steps are required').not().isEmpty(),
-        check('steps.*.step', 'Step is required').not().isEmpty(),
-        check('steps.*.description', 'Step description is required').not().isEmpty(),
-        check('categoryId', 'Category is required').not().isEmpty(),
-        check('categoryId', 'Invalid Mongo ID').isMongoId(),
+        check('id', 'El ID es requerido').not().isEmpty(),
+        check('id', 'ID no válido').isMongoId(),
+        check('name', 'El nombre es requerido').not().isEmpty(),
+				check('name', 'El nombre debe de tener al menos 3 caracteres').isLength({ min: 3 }),
+        check('description', 'La descripción es requerida').not().isEmpty(),
+				check('description', 'La descripción debe de tener al menos 25 caracteres').isLength({ min: 25 }),
+        check('timePreparation', 'El tiempo de preparación es requerido').not().isEmpty(),
+        check('timeCooking', 'El tiempo de cocción es requerido').not().isEmpty(),
+        check('servings', 'Las porciones son requeridas').not().isEmpty(),
+        check('servings', 'Las porciones deben de ser un número').isNumeric(),
+        check('ingredients', 'Los ingredientes son requeridos').not().isEmpty(),
+        check('ingredients.*.name', 'El nombre del ingrediente es requerido').not().isEmpty(),
+        check('steps', 'Los pasos son requeridos').not().isEmpty(),
+        check('steps.*.step', 'El número de paso es requerido').not().isEmpty(),
+        check('steps.*.description', 'La descripción del paso es requerida').not().isEmpty(),
+        check('categoryId', 'La categoría es requerida').not().isEmpty(),
+        check('categoryId', 'El ID de la categoría no es válido').isMongoId(),
         validateFields
       ],
       recipesController.updateRecipe
@@ -76,9 +91,9 @@ class RecipesRoutes {
 
     this.router.post('/comment/:id',
       [
-        check('id', 'Invalid Mongo ID').isMongoId(),
-        check('comment', 'Comment is required').not().isEmpty(),
-        check('comment', 'Comment must be a string').isString(),
+        check('id', 'El ID es requerido').not().isEmpty(),
+        check('id', 'ID no válido').isMongoId(),
+        check('comment', 'El comentario es requerido').not().isEmpty(),
         validateFields
       ],
       recipesController.addComment
@@ -86,7 +101,8 @@ class RecipesRoutes {
 
     this.router.post('/like/:id',
       [
-        check('id', 'Invalid Mongo ID').isMongoId(),
+        check('id', 'El ID es requerido').not().isEmpty(),
+        check('id', 'ID no válido').isMongoId(),
         validateFields
       ],
       recipesController.likeRecipe

@@ -15,10 +15,10 @@ class AuthRoutes {
   config(): void {
     this.router.post('/login',
       [
-        check('email', 'Email is required').not().isEmpty(),
-        check('email', 'Email is not valid').isEmail(),
-				check('password', 'The password is required').not().isEmpty(),
-				check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
+        check('email', 'El correo electrónico es requerido').not().isEmpty(),
+        check('email', 'Correo electrónico no válido').isEmail(),
+				check('password', 'La contraseña es requerida').not().isEmpty(),
+				check('password', 'La contraseña debe de tener al menos 8 caracteres').isLength({ min: 8 }),
         validateFields,
       ],
       authController.login
@@ -26,13 +26,12 @@ class AuthRoutes {
 
     this.router.post('/register',
       [
-        check('name', 'The name is required').not().isEmpty(),
-				check('name', 'The name must be at least 3 characters').isLength({ min: 3 }),
-				check('name', 'The name must be a string').isString(),
-        check('email', 'Email is required').not().isEmpty(),
-        check('email', 'Invalid email').isEmail(),
-        check('password', 'The password is required').not().isEmpty(),
-        check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
+        check('name', 'El nombre es requerido').not().isEmpty(),
+				check('name', 'El nombre debe de tener al menos 3 caracteres').isLength({ min: 3 }),
+        check('email', 'El correo electrónico es requerido').not().isEmpty(),
+        check('email', 'Correo electrónico no válido').isEmail(),
+        check('password', 'La contraseña es requerida').not().isEmpty(),
+        check('password', 'La contraseña debe de tener al menos 8 caracteres').isLength({ min: 8 }),
         validateFields,
       ],
       authController.register
@@ -45,7 +44,8 @@ class AuthRoutes {
 
     this.router.get('/profile/:id',
       [
-        check('id', 'Invalid Mongo ID').isMongoId(),
+        check('id', 'El ID es requerido').not().isEmpty(),
+        check('id', 'ID no válido').isMongoId(),
         validateFields,
       ],
       authController.getProfile

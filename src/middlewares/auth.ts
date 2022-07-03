@@ -5,14 +5,14 @@ import { DataStoredInToken, RequestWithUser } from '../interfaces';
 
 const validateToken = (req: RequestWithUser, res: Response) => {
 	// Read token from the header
-	const token = <string>req.header('x-auth-token');
+	const token = req.header('x-auth-token') as string;
 
 	// Check if there is a token
 	if (!token) {
 		return res.status(401).json({
       ok: false,
-			msg: 'There is no token. Authorization denied'
-		 });
+			msg: 'Sin token en la petición. Permiso denegado.'
+		});
 	}
 
 	return token;
@@ -21,22 +21,22 @@ const validateToken = (req: RequestWithUser, res: Response) => {
 export const authMiddleware = (req: RequestWithUser, res: Response, next: NextFunction) => {
 	try {
 		const token = validateToken(req, res) as string;
-		const decoded = jwt.verify(token, <string>process.env.JWT_SECRET) as DataStoredInToken;
+		const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DataStoredInToken;
 
 		req.user = decoded.user;
 		next();
 	} catch (err) {
-		res.status(401).json({ msg: 'Token is not valid.' });
+		return res.status(401).json({ msg: 'El token no es válido' });
 	}
 }
 
 export const getUser = (req: RequestWithUser, res: Response) => {
 	try {
 		const token = validateToken(req, res) as string;
-		const decoded = jwt.verify(token, <string>process.env.JWT_SECRET) as DataStoredInToken;
+		const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DataStoredInToken;
 
 		return decoded.user;
 	} catch (err) {
-		res.status(401).json({ msg: 'Token is not valid.' });
+		res.status(401).json({ msg: 'El token no es válido' });
 	}
 }

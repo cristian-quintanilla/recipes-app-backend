@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
 import bcryptjs from 'bcryptjs';
 
-import UserModel from '../models/User';
 import generateJWT from '../utils/generate-jwt';
+
+import UserModel from '../models/User';
 import RecipeModel from '../models/Recipe';
+
 import { DataStoredInToken, RequestWithUser } from '../interfaces';
 
 class AuthController {
@@ -15,13 +17,13 @@ class AuthController {
 			let user = await UserModel.findOne({ email });
 
       if (!user) {
-				return res.status(400).json({ ok: false, msg: 'User not found with that Email' });
+				return res.status(400).json({ ok: false, msg: 'Correo electrónico no registrado' });
 			}
 
 			// Verify if the password is correct
 			const passwordCorrect = await bcryptjs.compare(password, user.password);
 			if (!passwordCorrect) {
-				return res.status(400).json({ msg: 'Password is incorrect.' });
+				return res.status(400).json({ msg: 'Contraseña incorrecta' });
 			}
 
 			// Create and assign a token
@@ -36,7 +38,7 @@ class AuthController {
 			const token = await generateJWT(payload);
 			res.status(201).json({ token });
 		} catch (err) {
-			return res.status(500).json({ ok: false, msg: 'Error on the server.' });
+			return res.status(500).json({ ok: false, msg: 'Error en el servidor' });
 		}
   }
 
@@ -46,7 +48,7 @@ class AuthController {
     // Check if the Email already exists
     const user = await UserModel.findOne({ email });
     if (user) {
-      return res.status(400).json({ ok: false, msg: 'E-mail is already in use' });
+      return res.status(400).json({ ok: false, msg: 'Correo electrónico en uso' });
     }
 
     // Encrypt the password
@@ -69,7 +71,7 @@ class AuthController {
 			}
 
 			const token = await generateJWT(payload);
-			res.status(200).json({ ok: true, msg: 'User created successfully', token });
+			res.status(200).json({ token, ok: true, msg: 'Usuario creado correctamente' });
     }).catch(err => {
       res.status(500).json({ ok: false, msg: err.message });
     });
@@ -79,7 +81,7 @@ class AuthController {
 		UserModel.findById(req.user?._id).select('_id name email imageUrl').exec().then(user => {
 			res.status(200).json({ ok: true, user });
 		}).catch(err => {
-			return res.status(404).send({ msg: 'User not found.' });
+			return res.status(404).json({ msg: 'Usuario no encontrado' });
 		});
   }
 
@@ -94,7 +96,7 @@ class AuthController {
 
 			return res.status(200).json({ ok: true, user, recipes: lastRecipes });
 		} catch (err) {
-			res.status(404).send({ msg: 'User not found.' });
+			res.status(404).json({ msg: 'Usuario no encontrado' });
 		}
 	}
 }

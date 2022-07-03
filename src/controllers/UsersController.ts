@@ -17,7 +17,7 @@ class UsersController {
     const userFound = await UserModel.findById(user?._id);
 
     if (!userFound) {
-      return res.status(404).json({ ok: false, msg: 'User not found' });
+      return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' });
     } else {
       UserModel.findByIdAndUpdate(user?._id, {
         imageUrl: image,
@@ -26,9 +26,15 @@ class UsersController {
         age,
         favoriteRecipe
       }).then(() => {
-        res.status(200).json({ ok: true, msg: 'User information updated successfully' });
+        return res.status(200).json({
+          ok: true,
+          msg: 'Usuario actualizado correctamente',
+        });
       }).catch(err => {
-        res.status(500).json({ ok: false, msg: err.message });
+        return res.status(500).json({
+          ok: false,
+          msg: err.message
+        });
       });
     }
   }
@@ -42,7 +48,7 @@ class UsersController {
     const userFound = await UserModel.findById(user?._id);
 
     if (!userFound) {
-      return res.status(404).json({ ok: false, msg: 'User not found' });
+      return res.status(404).json({ ok: false, msg: 'Usuario no encontrado' });
     } else {
       // Encrypt the password
       const salt = await bcryptjs.genSalt();
@@ -51,9 +57,15 @@ class UsersController {
       UserModel.findByIdAndUpdate(user?._id, {
         password: newPassword,
       }).then(() => {
-        res.status(200).json({ ok: true, msg: 'Password updated successfully' });
+        return res.status(200).json({
+          ok: true,
+          msg: 'Contraseña actualizada correctamente',
+        });
       }).catch(err => {
-        res.status(500).json({ ok: false, msg: err.message });
+        return res.status(500).json({
+          ok: false,
+          msg: err.message
+        });
       });
     }
   }
@@ -66,9 +78,15 @@ class UsersController {
       await categoriesController.deleteCategoriesByUser((user?._id as string));
       await recipesController.deleteRecipesByUser((user?._id as string));
 
-      res.status(200).json({ ok: true, msg: 'User deleted successfully' });
+      return res.status(200).json({
+        ok: true,
+        msg: 'Usuario eliminado correctamente'
+      });
     }).catch(err => {
-      res.status(500).json({ ok: false, msg: err.message });
+      return res.status(500).json({
+        ok: false,
+        msg: err.message
+      });
     });
   }
 }

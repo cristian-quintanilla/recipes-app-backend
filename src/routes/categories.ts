@@ -17,11 +17,19 @@ class CategoriesRoutes {
 
     this.router.get('/', categoriesController.getCategories);
 
-    this.router.get('/:id', categoriesController.getCategory);
+    this.router.get('/:id',
+      [
+        check('id', 'El ID es requerido').not().isEmpty(),
+        check('id', 'ID no válido').isMongoId(),
+        validateFields,
+      ],
+      categoriesController.getCategory
+    );
 
     this.router.post('/',
       [
-        check('name', 'Name is required').not().isEmpty(),
+        check('name', 'El nombre es requerido').not().isEmpty(),
+				check('name', 'El nombre debe de tener al menos 3 caracteres').isLength({ min: 3 }),
         validateFields
       ],
       categoriesController.createCategory
@@ -29,7 +37,10 @@ class CategoriesRoutes {
 
     this.router.put('/:id',
       [
-        check('name', 'Name is required').not().isEmpty(),
+        check('id', 'El ID es requerido').not().isEmpty(),
+        check('id', 'ID no válido').isMongoId(),
+        check('name', 'El nombre es requerido').not().isEmpty(),
+				check('name', 'El nombre debe de tener al menos 3 caracteres').isLength({ min: 3 }),
         validateFields
       ],
       categoriesController.updateCategory

@@ -34,7 +34,7 @@ class RecipesController {
       const recipe = await validateRecipe(user?._id || '', id);
 
       if (!recipe) {
-        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+        return res.status(404).json({ ok: false, msg: 'Receta no encontrada' });
       }
 
       return res.status(200).json({
@@ -68,7 +68,7 @@ class RecipesController {
     const category = await validateCategory(user?._id || '', categoryId);
 
     if (!category) {
-      return res.status(404).json({ ok: false, msg: 'Category not found' });
+      return res.status(404).json({ ok: false, msg: 'Categoría no encontrada' });
     }
 
     RecipeModel.create({
@@ -85,7 +85,7 @@ class RecipesController {
     }).then(recipe => {
       return res.status(201).json({
         ok: true,
-        msg: 'Recipe created successfully',
+        msg: 'Receta creada con éxito',
         recipe,
       });
     }).catch(err => {
@@ -116,12 +116,12 @@ class RecipesController {
     const recipe = await validateRecipe(user?._id || '', id);
 
     if (!recipe) {
-      return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+      return res.status(404).json({ ok: false, msg: 'Receta no encontrada' });
     } else {
       const category = await validateCategory(user?._id || '', categoryId);
 
       if (!category) {
-        return res.status(404).json({ ok: false, msg: 'Category not found' });
+        return res.status(404).json({ ok: false, msg: 'Categoría no encontrada' });
       }
 
       RecipeModel.findByIdAndUpdate(id, {
@@ -138,7 +138,7 @@ class RecipesController {
       }, { new: true }).exec().then(recipe => {
         return res.status(200).json({
           ok: true,
-          msg: 'Recipe updated successfully',
+          msg: 'Receta actualizada con éxito',
           recipe,
         });
       }).catch(err => {
@@ -159,18 +159,18 @@ class RecipesController {
       const recipe = await validateRecipe(user?._id || '', id);
 
       if (!recipe) {
-        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+        return res.status(404).json({ ok: false, msg: 'Receta no encontrada' });
       }
 
       // Delete Recipe
       RecipeModel.findByIdAndDelete(id).exec().then(() => {
-        res.status(200).json({
+        return res.status(200).json({
           ok: true,
-          msg: 'Recipe deleted successfully',
+          msg: 'Receta eliminada con éxito',
         });
       });
     } catch (err: any) {
-      res.status(500).json({
+      return res.status(500).json({
         ok: false,
         msg: err
       });
@@ -196,19 +196,16 @@ class RecipesController {
 
     RecipeModel.findById(id).exec().then(recipe => {
       if (!recipe) {
-        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+        return res.status(404).json({ ok: false, msg: 'Receta no encontrada' });
       }
 
-      recipe.comments.push({
-        user: user?._id!,
-        comment,
-      });
-
+      // Add comment to recipe
+      recipe.comments.push({ user: user?._id!, comment });
       recipe.save();
 
       return res.status(200).json({
         ok: true,
-        msg: 'Comment added successfully',
+        msg: 'Comentario agregado con éxito',
       });
     }).catch(err => {
       return res.status(500).json({
@@ -225,7 +222,7 @@ class RecipesController {
 
     RecipeModel.findById(id).exec().then(recipe => {
       if (!recipe) {
-        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+        return res.status(404).json({ ok: false, msg: 'Receta no encontrada' });
       }
 
       // User has already vote
@@ -245,16 +242,18 @@ class RecipesController {
       }
 
       // Add like
-      recipe.likes.push({
-        user: user?._id || '',
-      });
-
+      recipe.likes.push({ user: user?._id || '' });
       recipe.save();
 
       return res.status(200).json({
         ok: true,
-        msg: 'Recipe liked successfully',
+        msg: 'Receta votada con éxito',
       });
+    }).catch(err => {
+      return res.status(500).json({
+        ok: false,
+        msg: err
+      })
     });
   }
 
@@ -285,7 +284,10 @@ class RecipesController {
 				recipes,
 			});
 		} catch (err) {
-			res.status(500).json({ ok: false, msg: 'Error while getting recipes' });
+			return res.status(500).json({
+        ok: false,
+        msg: 'Ha ocurrido un error al obtener las recetas'
+      });
 		}
   }
 
@@ -298,7 +300,7 @@ class RecipesController {
       { path: 'comments.user', select: 'name' }
     ]).exec().then(recipe => {
       if (!recipe) {
-        return res.status(404).json({ ok: false, msg: 'Recipe not found' });
+        return res.status(404).json({ ok: false, msg: 'Receta no encontrada' });
       }
 
       return res.status(200).json({
@@ -313,7 +315,7 @@ class RecipesController {
     });
   }
 
-  public async getMostLikedRecipes(req: Request, res: Response) {
+  public async getMostLikedRecipes(_req: Request, res: Response) {
     RecipeModel.find().sort({ likes: -1 }).limit(5).populate([
       { path: 'category', select: 'name' },
       { path: 'user', select: 'name email' },

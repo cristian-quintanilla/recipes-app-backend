@@ -17,18 +17,14 @@ class UsersRoutes {
 
     this.router.put('/edit',
       [
-        check('name', 'The name is required').not().isEmpty(),
-				check('name', 'The name must be at least 3 characters').isLength({ min: 3 }),
-				check('name', 'The name must be a string').isString(),
-				check('image', 'The image url is required').not().isEmpty(),
-				check('image', 'The image url must be a string').isString(),
-				check('country', 'The country is required').not().isEmpty(),
-				check('country', 'The country must be a string').isString(),
-				check('age', 'The age is required').not().isEmpty(),
-				check('age', 'The age must be a number').isNumeric(),
-				check('favoriteRecipe', 'The favorite recipe is required').not().isEmpty(),
-				check('favoriteRecipe', 'The favorite recipe must be a string').isString(),
-				check('favoriteRecipe', 'The favorite must be less than 100 characters').isLength({ max: 100 }),
+        check('name', 'El nombre es requerido').not().isEmpty(),
+				check('name', 'El nombre debe de tener al menos 3 caracteres').isLength({ min: 3 }),
+				check('image', 'El URL de la imagen es requerida').not().isEmpty(),
+				check('country', 'El país es requerido').not().isEmpty(),
+				check('age', 'La edad es requerida').not().isEmpty(),
+				check('age', 'La edad debe de ser un número').isNumeric(),
+				check('favoriteRecipe', 'La receta favorita es requerida').not().isEmpty(),
+				check('favoriteRecipe', 'La receta favorita debe de tener menos de 100 caracteres').isLength({ max: 100 }),
         validateFields,
       ],
       usersController.editUser
@@ -36,8 +32,8 @@ class UsersRoutes {
 
 		this.router.put('/update-password',
 			[
-				check('password', 'The password is required').not().isEmpty(),
-				check('password', 'The password must have at least 8 characters').isLength({ min: 8 }),
+        check('password', 'La contraseña es requerida').not().isEmpty(),
+        check('password', 'La contraseña debe de tener al menos 8 caracteres').isLength({ min: 8 }),
 				validateFields
 			],
 			usersController.updatePassword

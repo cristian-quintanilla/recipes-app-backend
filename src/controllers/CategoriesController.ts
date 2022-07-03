@@ -33,7 +33,7 @@ class CategoriesController {
       const category = await validateCategory(user?._id || '', id);
 
       if (!category) {
-        return res.status(404).json({ ok: false, msg: 'Category not found' });
+        return res.status(404).json({ ok: false, msg: 'Categoría no encontrada' });
       }
 
       return res.status(200).json({ ok: true, category });
@@ -75,14 +75,14 @@ class CategoriesController {
     const category = await validateCategory(user?._id || '', id);
 
     if (!category) {
-      return res.status(404).json({ ok: false, msg: 'Category not found' });
+      return res.status(404).json({ ok: false, msg: 'Categoría no encontrada' });
     }
 
     CategoryModel.findByIdAndUpdate(id, { name }, { new: true }).exec()
     .then(category => {
       res.status(200).json({
         ok: true,
-        msg: 'Category updated successfully',
+        msg: 'Categoría actualizada correctamente',
         category,
       });
     }).catch(err => {
@@ -101,13 +101,13 @@ class CategoriesController {
     const category = await validateCategory(user?._id || '', id);
 
     if (!category) {
-      return res.status(404).json({ ok: false, msg: 'Category not found' });
+      return res.status(404).json({ ok: false, msg: 'Categoría no encontrada' });
     }
 
     CategoryModel.findByIdAndRemove(id).then(category => {
       res.status(200).json({
         ok: true,
-        msg: 'Category deleted successfully',
+        msg: 'Categoría eliminada correctamente',
         category,
       });
     }).catch(err => {
