@@ -1,8 +1,8 @@
 # Recipes App Back-end
 
-**REST API escrita en Express, Node.js, y TypeScript.**
+**REST API developed in Node.js with Express and GraphQL.**
 
 #### Cuenta con:
-1. Validaciones para el insertado de datos.
-2. Sistema de Autenticación con JsonWebTokens.
-3. Conección a una Base de Datos remota (Mongo Atlas).
+1. Validations for inserting data.
+2. Authentication system with tokens.
+3. Connection with a remote database (Mongo Atlas).
