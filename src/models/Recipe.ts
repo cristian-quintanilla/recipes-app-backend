@@ -1,5 +1,21 @@
-const mongoose = require('mongoose');
-const { Schema, model } = mongoose;
+import mongoose, { model, Schema } from 'mongoose';
+
+import { Category, Comment, Ingredient, Like, Step, User } from '../interfaces';
+
+interface Recipe extends mongoose.Document {
+  name: string;
+  description: string;
+  timePreparation: string;
+  timeCooking: string;
+  servings: number;
+  ingredients: Ingredient[];
+  steps: Step[];
+  imageUrl?: string;
+  category: Category;
+  user: User;
+  comments: Comment[];
+  likes: Like[];
+}
 
 const RecipeSchema = new Schema({
   name: {
@@ -71,4 +87,4 @@ const RecipeSchema = new Schema({
   versionKey: false,
 });
 
-module.exports = model('Recipe', RecipeSchema);
+export default model<Recipe>('Recipe', RecipeSchema);

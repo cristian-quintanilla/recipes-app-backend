@@ -1,12 +1,12 @@
-const express = require('express');
-const cors = require('cors');
-const { config } = require('dotenv');
-const { resolve } = require('path');
+import express from 'express';
+import cors from 'cors';
+import { config } from 'dotenv';
+import { resolve } from 'path';
 
-const { databaseConnection } = require('./src/database/config');
+import { databaseConnection } from'./database/config';
 
 // Configure environment variables
-config({ path: resolve(__dirname, './.env') });
+config({ path: resolve(__dirname, '../.env') });
 
 // Create the express app anc connect to the database
 const app = express();
