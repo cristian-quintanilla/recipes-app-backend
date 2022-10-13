@@ -8,12 +8,10 @@ export interface DataStoredInToken {
 	}
 }
 
-export interface RequestWithUser extends Request {
-	user?: {
-		_id: string;
-		name: string;
-    email: string;
-	},
+export interface CreateAccountInterface {
+  name: string;
+  email: string;
+  password: string;
 }
 
 export interface User {

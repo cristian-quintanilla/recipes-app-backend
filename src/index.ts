@@ -2,8 +2,10 @@ import express from 'express';
 import cors from 'cors';
 import { config } from 'dotenv';
 import { resolve } from 'path';
+import { graphqlHTTP } from 'express-graphql';
 
 import { databaseConnection } from'./database/config';
+import { schema } from './schema';
 
 // Configure environment variables
 config({ path: resolve(__dirname, '../.env') });
@@ -12,8 +14,12 @@ config({ path: resolve(__dirname, '../.env') });
 const app = express();
 databaseConnection();
 
-// Enable cors
+// Enable cors and define graphql url
 app.use(cors());
+app.use('/graphql', graphqlHTTP({
+  schema,
+  graphiql: true,
+}));
 
 // Settings
 app.set('port', process.env.PORT || 4000);

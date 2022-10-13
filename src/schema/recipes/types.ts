@@ -1,37 +1,8 @@
 import { GraphQLID, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
 import { DateResolver } from 'graphql-scalars';
 
-export const UserType = new GraphQLObjectType({
-  name: 'User',
-  description: 'User information',
-  fields: () => ({
-    age: { type: GraphQLInt },
-    email: { type: GraphQLString },
-    favoriteRecipe: { type: GraphQLString },
-    id: { type: GraphQLID },
-    imageUrl: { type: GraphQLString },
-    name: { type: GraphQLString },
-    password: { type: GraphQLString },
-  }),
-});
-
-export const CategoryType = new GraphQLObjectType({
-  name: 'Category',
-  description: 'Category of a recipe',
-  fields: () => ({
-    id: { type: GraphQLID },
-    name: { type: GraphQLString },
-    user: {
-      type: UserType,
-      resolve(parent, _args) {
-        // Parent gets the category found
-        // TODO: Get author from db based on category id
-        console.log(parent);
-        return null;
-      }
-    }
-  }),
-});
+import { CategoryType } from '../categories/types';
+import { UserType } from '../auth/types';
 
 export const IngredientType = new GraphQLObjectType({
   name: 'Ingredient',
