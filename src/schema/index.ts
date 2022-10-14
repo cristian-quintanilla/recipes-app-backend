@@ -1,11 +1,12 @@
 import { GraphQLSchema, GraphQLObjectType, GraphQLID, GraphQLString } from 'graphql';
 
-import { createAccount } from './auth/mutation';
+import { authLogin, createAccount } from './auth/mutation';
 
 export const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'MutationType',
     fields: {
+      authLogin,
       createAccount,
     }
   }),

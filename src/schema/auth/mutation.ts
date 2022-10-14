@@ -1,7 +1,7 @@
 import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 
 import { AuthType } from './types';
-import { register } from './resolvers';
+import { login, register } from './resolvers';
 
 export const createAccount = {
   type: AuthType,
@@ -16,14 +16,14 @@ export const createAccount = {
   }
 }
 
-// export const login = {
-//   type: UserType,
-//   description: 'Login with user credentials',
-//   args: {
-//     email: { type: new GraphQLNonNull(GraphQLString) },
-//     password: { type: new GraphQLNonNull(GraphQLString) },
-//   },
-//   resolve: (_parent: any, args: any) => {
-//     console.log(args);
-//   }
-// }
+export const authLogin = {
+  type: AuthType,
+  description: 'Login with user credentials',
+  args: {
+    email: { type: new GraphQLNonNull(GraphQLString) },
+    password: { type: new GraphQLNonNull(GraphQLString) },
+  },
+  resolve: (_parent: any, args: any) => {
+    return login(args);
+  }
+}
