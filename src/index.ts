@@ -5,6 +5,7 @@ import { resolve } from 'path';
 import { graphqlHTTP } from 'express-graphql';
 
 import { databaseConnection } from'./database/config';
+import { getErrorCode } from './utils/get-error-code';
 import { schema } from './schema';
 
 // Configure environment variables
@@ -19,6 +20,10 @@ app.use(cors());
 app.use('/graphql', graphqlHTTP({
   schema,
   graphiql: true,
+  customFormatErrorFn: (err) => {
+    const error = getErrorCode(err.message);
+    return ({ message: error.message, statusCode: error.statusCode });
+  }
 }));
 
 // Settings

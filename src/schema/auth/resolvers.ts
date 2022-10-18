@@ -2,6 +2,8 @@ import bcryptjs from 'bcryptjs';
 
 import User from '../../models/User';
 import generateJWT from '../../utils/generate-jwt';
+import { errorName } from './../../constants';
+import { validateToken } from '../../utils/validate-token';
 import { AuthLoginInterface, CreateAccountInterface, DataStoredInToken } from '../../interfaces';
 
 export const register = async ({ email, name, password }: CreateAccountInterface) => {
@@ -10,7 +12,7 @@ export const register = async ({ email, name, password }: CreateAccountInterface
     let user = await User.findOne({ email });
 
     if (user) {
-      return { token: null, message: 'E-mail already in use', };
+      return new Error(errorName.EMAIL_IN_USE);
     }
 
     // Encrypt the password
@@ -30,8 +32,8 @@ export const register = async ({ email, name, password }: CreateAccountInterface
 
     const token = await generateJWT(payload);
     return { token, message: 'User created successfully', };
-  } catch (_err) {
-    return { token: null, message: 'Error creating the user', };
+  } catch (err) {
+    return new Error(errorName.SERVER_ERROR);
   };
 };
 
@@ -41,13 +43,13 @@ export const login = async ({ email, password }: AuthLoginInterface) => {
     let user = await User.findOne({ email });
 
     if (!user) {
-      return { token: null, message: 'User not found', };
+      return new Error(errorName.USER_NOT_FOUND);
     }
 
     // Verify if the password is correct
     const passwordCorrect = await bcryptjs.compare(password, user.password);
     if (!passwordCorrect) {
-      return { token: null, message: 'Wrong password', };
+      return new Error(errorName.WRONG_PASSWORD);
     }
 
     // Create and assign a token
@@ -62,6 +64,24 @@ export const login = async ({ email, password }: AuthLoginInterface) => {
     const token = await generateJWT(payload);
     return { token, message: 'Logged successfully', };
   } catch (_err) {
-    return { token: null, message: 'Error creating the user', };
+    return new Error(errorName.SERVER_ERROR);
   };
 }
+
+// TODO: Get Me
+// export const getLoggedUser = (context: any) => {
+//   const { authorization } = context.headers;
+//   const token = authorization.split(' ')[1];
+
+//   const user = validateToken(token);
+//   const id = user?.user?._id || '';
+
+//   try {
+//     const user = User.findById(id).select('_id name email imageUrl age favoriteRecipe');
+//     console.log(user)
+//     return user;
+//   } catch (err) {
+//     console.log(err);
+//     return null;
+//   }
+// }
