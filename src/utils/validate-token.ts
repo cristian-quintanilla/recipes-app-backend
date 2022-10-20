@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 
+import { errorName } from '../constants';
+
 import { DataStoredInToken } from '../interfaces';
 
 export const validateToken = (token: string) => {
@@ -7,6 +9,6 @@ export const validateToken = (token: string) => {
 		const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as DataStoredInToken;
     return decoded;
   } catch (err) {
-    return null;
+    throw new Error(errorName.INVALID_TOKEN);
   }
 }

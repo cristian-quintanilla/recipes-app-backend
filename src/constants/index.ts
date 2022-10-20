@@ -3,6 +3,7 @@ export const errorName = {
   SERVER_ERROR: 'SERVER_ERROR',
   USER_NOT_FOUND: 'USER_NOT_FOUND',
   WRONG_PASSWORD: 'WRONG_PASSWORD',
+  INVALID_TOKEN: 'INVALID_TOKEN',
 }
 
 export const errorType = {
@@ -22,4 +23,8 @@ export const errorType = {
     message: 'Wrong password, try again',
     statusCode: 400,
   },
+  INVALID_TOKEN: {
+    message: 'Invalid token',
+    statusCode: 400,
+  }
 };

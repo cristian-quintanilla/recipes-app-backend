@@ -68,20 +68,23 @@ export const login = async ({ email, password }: AuthLoginInterface) => {
   };
 }
 
-// TODO: Get Me
-// export const getLoggedUser = (context: any) => {
-//   const { authorization } = context.headers;
-//   const token = authorization.split(' ')[1];
+export const getLoggedUser = (context: any) => {
+  const { authorization } = context.headers;
+  const token = authorization.split(' ')[1];
+  let id = null;
 
-//   const user = validateToken(token);
-//   const id = user?.user?._id || '';
+  // Validate token
+  try {
+    const userToken = validateToken(token);
+    id = userToken?.user?._id;
+  } catch (err) {
+    return new Error(errorName.INVALID_TOKEN);
+  }
 
-//   try {
-//     const user = User.findById(id).select('_id name email imageUrl age favoriteRecipe');
-//     console.log(user)
-//     return user;
-//   } catch (err) {
-//     console.log(err);
-//     return null;
-//   }
-// }
+  if (id) {
+    const user = User.findById(id).select('_id name email imageUrl age favoriteRecipe');
+    return user;
+  } else {
+    return new Error(errorName.USER_NOT_FOUND);
+  }
+}

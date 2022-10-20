@@ -1,6 +1,7 @@
-import { GraphQLSchema, GraphQLObjectType, GraphQLID, GraphQLString } from 'graphql';
+import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 
 import { authLogin, createAccount } from './auth/mutation';
+import { getMe } from './auth/query';
 
 export const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
@@ -13,13 +14,7 @@ export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'QueryType',
     fields: {
-      author: {
-        type: GraphQLString,
-        description: 'Get an author information by id',
-        resolve(_parent, _args) {
-          return 'ASDASDASD';
-        }
-      },
+      getMe
     }
   })
 });
