@@ -68,7 +68,7 @@ export const login = async ({ email, password }: AuthLoginInterface) => {
   };
 }
 
-export const getLoggedUser = (context: any) => {
+export const getLoggedUser = async (context: any) => {
   const { authorization } = context.headers;
   const token = authorization.split(' ')[1];
   let id = null;
@@ -82,9 +82,18 @@ export const getLoggedUser = (context: any) => {
   }
 
   if (id) {
-    const user = User.findById(id).select('_id name email imageUrl age favoriteRecipe');
+    const user = await User.findById(id);
     return user;
   } else {
+    return new Error(errorName.USER_NOT_FOUND);
+  }
+}
+
+export const getProfile = async ({ _id }: any) => {
+  try {
+    const user = await User.findById(_id);
+    return user;
+  } catch (err) {
     return new Error(errorName.USER_NOT_FOUND);
   }
 }

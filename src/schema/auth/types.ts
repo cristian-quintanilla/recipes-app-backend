@@ -1,6 +1,9 @@
-import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLID } from 'graphql';
+import { GraphQLObjectType, GraphQLInt, GraphQLString, GraphQLID, GraphQLList } from 'graphql';
 
-export const UserType = new GraphQLObjectType({
+import Recipe from '../../models/Recipe';
+import { RecipeType } from '../recipes/types';
+
+export const UserType: GraphQLObjectType = new GraphQLObjectType({
   name: 'User',
   description: 'User information',
   fields: () => ({
@@ -11,6 +14,13 @@ export const UserType = new GraphQLObjectType({
     imageUrl: { type: GraphQLString },
     name: { type: GraphQLString },
     password: { type: GraphQLString },
+    lastRecipes: {
+      type: new GraphQLList(RecipeType),
+      resolve(parent, _args) {
+        // Parent gets the user found
+        return Recipe.find({ user: parent._id }).sort({ createdAt: -1 }).limit(3);
+      }
+    },
   }),
 });
 
