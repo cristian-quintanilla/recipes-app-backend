@@ -3,7 +3,7 @@ import bcryptjs from 'bcryptjs';
 import User from '../../models/User';
 import generateJWT from '../../utils/generate-jwt';
 import { errorName } from './../../constants';
-import { validateToken } from '../../utils/validate-token';
+import { validateID, validateToken } from '../../utils/validate-token';
 
 import {
   AuthLoginInterface,
@@ -75,21 +75,7 @@ export const login = async ({ email, password }: AuthLoginInterface) => {
 };
 
 export const getLoggedUser = async (context: any) => {
-  const { authorization } = context.headers;
-  let id = null;
-
-  if (!authorization) {
-    return new Error(errorName.INVALID_TOKEN);
-  }
-
-  // Validate token
-  try {
-    const token = authorization.split(' ')[1];
-    const userToken = validateToken(token);
-    id = userToken?.user?._id;
-  } catch (err) {
-    return new Error(errorName.INVALID_TOKEN);
-  }
+  const id = validateID(context);
 
   if (id) {
     const user = await User.findById(id);
@@ -111,21 +97,7 @@ export const getProfile = async ({ _id }: any) => {
 };
 
 export const editUser = async (context: any, args: UpdateAccountInterface) => {
-  const { authorization } = context.headers;
-  let id = null;
-
-  if (!authorization) {
-    return new Error(errorName.INVALID_TOKEN);
-  }
-
-  // Validate token
-  try {
-    const token = authorization.split(' ')[1];
-    const userToken = validateToken(token);
-    id = userToken?.user?._id;
-  } catch (err) {
-    return new Error(errorName.INVALID_TOKEN);
-  }
+  const id = validateID(context);
 
   // Validate user
   if (id) {
@@ -154,3 +126,31 @@ export const editUser = async (context: any, args: UpdateAccountInterface) => {
     return new Error(errorName.USER_NOT_FOUND);
   }
 };
+
+export const passwordUpdate = async (context: any, { password }: any) => {
+  const id = validateID(context);
+
+  if (id) {
+    const user = await User.findById(id);
+
+    if (!user) {
+      return new Error(errorName.USER_NOT_FOUND);
+    }
+
+    // Update password
+    const salt = await bcryptjs.genSalt();
+    const newPassword = await bcryptjs.hash(password, salt);
+
+    try {
+      const user = await User.findByIdAndUpdate(id, {
+        password: newPassword,
+      }, { new: true });
+
+      return user;
+    } catch (err) {
+      return new Error(errorName.USER_UPDATE);
+    }
+  } else {
+    return new Error(errorName.USER_NOT_FOUND);
+  }
+}

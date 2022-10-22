@@ -5,6 +5,7 @@ export const errorName = {
   WRONG_PASSWORD: 'WRONG_PASSWORD',
   INVALID_TOKEN: 'INVALID_TOKEN',
   USER_UPDATE: 'USER_UPDATE',
+  UPDATE_PASSWORD: 'UPDATE_PASSWORD',
 }
 
 export const errorType = {
@@ -30,6 +31,10 @@ export const errorType = {
   },
   USER_UPDATE: {
     message: 'An error ocurred updating the user, try again',
+    statusCode: 500,
+  },
+  UPDATE_PASSWORD: {
+    message: 'An error ocurred updating the password',
     statusCode: 500,
   }
 };

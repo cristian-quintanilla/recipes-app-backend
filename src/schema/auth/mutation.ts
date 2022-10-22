@@ -2,7 +2,7 @@ import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { GraphQLNonNegativeInt } from 'graphql-scalars';
 
 import { AuthType, UserType } from './types';
-import { editUser, login, register } from './resolvers';
+import { editUser, login, passwordUpdate, register } from './resolvers';
 
 export const createAccount = {
   type: AuthType,
@@ -40,5 +40,16 @@ export const updateAccount = {
   },
   resolve: (_parent: any, args: any, context: any) => {
     return editUser(context, args);
+  }
+}
+
+export const updatePassword = {
+  type: UserType,
+  description: 'Update user password',
+  args: {
+    password: { type: GraphQLString }
+  },
+  resolve: (_parent: any, args: any, context: any) => {
+    return passwordUpdate(context, args);
   }
 }
