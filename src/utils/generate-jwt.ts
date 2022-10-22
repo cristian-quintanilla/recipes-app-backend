@@ -5,7 +5,7 @@ import { DataStoredInToken } from '../interfaces';
 function generateJWT(payload: DataStoredInToken) {
 	return new Promise((resolve, reject) => {
 		jwt.sign(payload, (process.env.JWT_SECRET as string), {
-			expiresIn: '48h'
+			expiresIn: '7d'
 		}, (err, token) => {
 			if (err) {
 				reject('Error al generar el Token');

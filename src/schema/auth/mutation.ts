@@ -1,7 +1,8 @@
-import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLNonNegativeInt } from 'graphql-scalars';
 
-import { AuthType } from './types';
-import { login, register } from './resolvers';
+import { AuthType, UserType } from './types';
+import { editUser, login, register } from './resolvers';
 
 export const createAccount = {
   type: AuthType,
@@ -25,5 +26,19 @@ export const authLogin = {
   },
   resolve: (_parent: any, args: any) => {
     return login(args);
+  }
+}
+
+export const updateAccount = {
+  type: UserType,
+  description: 'Update user data',
+  args: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    imageUrl: { type: GraphQLString },
+    age: { type: GraphQLNonNegativeInt },
+    favoriteRecipe: { type: GraphQLString },
+  },
+  resolve: (_parent: any, args: any, context: any) => {
+    return editUser(context, args);
   }
 }

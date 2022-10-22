@@ -4,6 +4,7 @@ export const errorName = {
   USER_NOT_FOUND: 'USER_NOT_FOUND',
   WRONG_PASSWORD: 'WRONG_PASSWORD',
   INVALID_TOKEN: 'INVALID_TOKEN',
+  USER_UPDATE: 'USER_UPDATE',
 }
 
 export const errorType = {
@@ -26,5 +27,9 @@ export const errorType = {
   INVALID_TOKEN: {
     message: 'Invalid token',
     statusCode: 400,
+  },
+  USER_UPDATE: {
+    message: 'An error ocurred updating the user, try again',
+    statusCode: 500,
   }
 };

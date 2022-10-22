@@ -14,6 +14,13 @@ export interface CreateAccountInterface {
   password: string;
 }
 
+export interface UpdateAccountInterface {
+	name: string;
+	imageUrl?: string;
+	age?: number;
+	favoriteRecipe?: string;
+}
+
 export interface AuthLoginInterface {
   email: string;
   password: string;
