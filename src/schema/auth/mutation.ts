@@ -1,8 +1,8 @@
-import { GraphQLNonNull, GraphQLString } from 'graphql';
+import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql';
 import { GraphQLNonNegativeInt } from 'graphql-scalars';
 
 import { AuthType, UserType } from './types';
-import { editUser, login, passwordUpdate, register } from './resolvers';
+import { deleteUser, editUser, login, passwordUpdate, register } from './resolvers';
 
 export const createAccount = {
   type: AuthType,
@@ -51,5 +51,19 @@ export const updatePassword = {
   },
   resolve: (_parent: any, args: any, context: any) => {
     return passwordUpdate(context, args);
+  }
+}
+
+export const deleteAccount = {
+  type: new GraphQLObjectType({
+    name: 'AccountDeleteType',
+    description: 'Account delete message',
+    fields: () => ({
+      message: { type: GraphQLString },
+    }),
+  }),
+  description: 'Delete user account',
+  resolve: (_parent: any, _args: any, context: any) => {
+    return deleteUser(context);
   }
 }

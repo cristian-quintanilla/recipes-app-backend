@@ -154,3 +154,22 @@ export const passwordUpdate = async (context: any, { password }: any) => {
     return new Error(errorName.USER_NOT_FOUND);
   }
 }
+
+export const deleteUser = async (context: any) => {
+  const id = validateID(context);
+
+  if (id) {
+    const user = await User.findByIdAndDelete(id);
+
+    if (!user) {
+      return new Error(errorName.USER_NOT_FOUND);
+    }
+
+    // TODO: Delete user categories and recipes
+    return {
+      message: 'Account deleted successfully'
+    };
+  } else {
+    return new Error(errorName.USER_NOT_FOUND);
+  }
+}

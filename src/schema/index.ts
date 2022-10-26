@@ -1,6 +1,12 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 
-import { authLogin, createAccount, updateAccount, updatePassword } from './auth/mutation';
+import {
+  authLogin,
+  createAccount,
+  deleteAccount,
+  updateAccount,
+  updatePassword,
+} from './auth/mutation';
 import { getMe, getUser } from './auth/query';
 
 export const schema = new GraphQLSchema({
@@ -9,15 +15,16 @@ export const schema = new GraphQLSchema({
     fields: {
       authLogin,
       createAccount,
+      deleteAccount,
       updateAccount,
       updatePassword,
-    }
+    },
   }),
   query: new GraphQLObjectType({
     name: 'QueryType',
     fields: {
       getMe,
-      getUser
-    }
-  })
+      getUser,
+    },
+  }),
 });
