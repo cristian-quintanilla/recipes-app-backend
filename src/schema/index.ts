@@ -1,23 +1,25 @@
 import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 
-import {
-  authLogin,
-  createAccount,
-  deleteAccount,
-  updateAccount,
-  updatePassword,
-} from './auth/mutation';
+// Account
+import { authLogin, createAccount, deleteAccount, updateAccount, updatePassword } from './auth/mutation';
 import { getMe, getUser } from './auth/query';
+
+// Categories
+import { createCategory } from './categories/mutation';
 
 export const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'MutationType',
     fields: {
+      // Account
       authLogin,
       createAccount,
       deleteAccount,
       updateAccount,
       updatePassword,
+
+      // Categories
+      createCategory,
     },
   }),
   query: new GraphQLObjectType({

@@ -39,7 +39,6 @@ export interface User {
 export interface Category {
 	_id: string;
 	name: string;
-  user: User;
 }
 
 export interface Ingredient {

@@ -87,7 +87,7 @@ export const getLoggedUser = async (context: any) => {
 
 export const getProfile = async ({ _id }: any) => {
   try {
-    const user = await User.findById('634e14718e2d1d8bd4ad9f15');
+    const user = await User.findById(_id);
 
     if (user) return user;
     return new Error(errorName.USER_NOT_FOUND);
