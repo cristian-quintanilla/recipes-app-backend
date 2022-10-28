@@ -6,6 +6,7 @@ export const errorName = {
   INVALID_TOKEN: 'INVALID_TOKEN',
   USER_UPDATE: 'USER_UPDATE',
   UPDATE_PASSWORD: 'UPDATE_PASSWORD',
+  CATEGORIES_ERROR: 'CATEGORIES_ERROR'
 }
 
 export const errorType = {
@@ -35,6 +36,10 @@ export const errorType = {
   },
   UPDATE_PASSWORD: {
     message: 'An error ocurred updating the password',
+    statusCode: 500,
+  },
+  CATEGORIES_ERROR: {
+    message: 'An error ocurred getting the categories',
     statusCode: 500,
   }
 };

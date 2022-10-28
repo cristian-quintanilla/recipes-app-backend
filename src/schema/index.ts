@@ -6,6 +6,7 @@ import { getMe, getUser } from './auth/query';
 
 // Categories
 import { createCategory } from './categories/mutation';
+import { categories } from './categories/query';
 
 export const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
@@ -25,8 +26,12 @@ export const schema = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'QueryType',
     fields: {
+      // User
       getMe,
       getUser,
+
+      // Categories
+      categories,
     },
   }),
 });
