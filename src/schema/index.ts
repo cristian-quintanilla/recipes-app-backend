@@ -8,6 +8,9 @@ import { getMe, getUser } from './auth/query';
 import { createCategory } from './categories/mutation';
 import { categories } from './categories/query';
 
+// Recipes
+import { createRecipe } from './recipes/mutation';
+
 export const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
     name: 'MutationType',
@@ -21,6 +24,9 @@ export const schema = new GraphQLSchema({
 
       // Categories
       createCategory,
+
+      // Recipes
+      createRecipe,
     },
   }),
   query: new GraphQLObjectType({

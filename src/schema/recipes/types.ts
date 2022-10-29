@@ -1,8 +1,10 @@
-import { GraphQLID, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString } from 'graphql';
+import { GraphQLID, GraphQLInputObjectType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql';
 import { DateResolver } from 'graphql-scalars';
 
 import { CategoryType } from '../categories/types';
 import { UserType } from '../auth/types';
+import Category from '../../models/Category';
+import User from '../../models/User';
 
 export const IngredientType = new GraphQLObjectType({
   name: 'Ingredient',
@@ -12,12 +14,29 @@ export const IngredientType = new GraphQLObjectType({
   })
 });
 
+export const IngredientInputType = new GraphQLInputObjectType({
+  name: 'IngredientInput',
+  description: 'A single ingredient input object',
+  fields: () => ({
+    name: { type: new GraphQLNonNull(GraphQLString) }
+  })
+});
+
 export const StepType = new GraphQLObjectType({
   name: 'Step',
   description: 'A single step object',
   fields: () => ({
     step: { type: GraphQLInt },
     description: { type: GraphQLString },
+  })
+});
+
+export const StepInputType = new GraphQLInputObjectType({
+  name: 'StepInput',
+  description: 'A single step input object',
+  fields: () => ({
+    step: { type: new GraphQLNonNull(GraphQLInt) },
+    description: { type: new GraphQLNonNull(GraphQLString) },
   })
 });
 
@@ -50,18 +69,16 @@ export const RecipeType = new GraphQLObjectType({
       type: CategoryType,
       resolve(parent, _args) {
         // Parent gets the recipe found
-        // TODO: Get category from db
-        console.log(parent);
-        return null;
+        const category = Category.findById(parent.category);
+        return category;
       }
     },
     user: {
       type: UserType,
       resolve(parent, _args) {
         // Parent gets the recipe found
-        // TODO: Get user from db
-        console.log(parent);
-        return null;
+        const user = User.findById(parent.user);
+        return user;
       }
     }
   }),

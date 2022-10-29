@@ -6,7 +6,8 @@ export const errorName = {
   INVALID_TOKEN: 'INVALID_TOKEN',
   USER_UPDATE: 'USER_UPDATE',
   UPDATE_PASSWORD: 'UPDATE_PASSWORD',
-  CATEGORIES_ERROR: 'CATEGORIES_ERROR'
+  CATEGORIES_ERROR: 'CATEGORIES_ERROR',
+  CREATE_RECIPE: 'CREATE_RECIPE',
 }
 
 export const errorType = {
@@ -40,6 +41,10 @@ export const errorType = {
   },
   CATEGORIES_ERROR: {
     message: 'An error ocurred getting the categories',
+    statusCode: 500,
+  },
+  CREATE_RECIPE: {
+    message: 'An error ocurred creating the recipe',
     statusCode: 500,
   }
 };
