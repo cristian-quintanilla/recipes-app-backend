@@ -8,6 +8,9 @@ export const errorName = {
   UPDATE_PASSWORD: 'UPDATE_PASSWORD',
   CATEGORIES_ERROR: 'CATEGORIES_ERROR',
   CREATE_RECIPE: 'CREATE_RECIPE',
+  UPDATE_RECIPE: 'UPDATE_RECIPE',
+  RECIPE_NOT_FOUND: 'RECIPE_NOT_FOUND',
+  PERMISSIONS_DENIED: 'PERMISSIONS_DENIED',
 }
 
 export const errorType = {
@@ -46,5 +49,17 @@ export const errorType = {
   CREATE_RECIPE: {
     message: 'An error ocurred creating the recipe',
     statusCode: 500,
-  }
+  },
+  RECIPE_NOT_FOUND: {
+    message: 'Recipe not found',
+    statusCode: 404,
+  },
+  PERMISSIONS_DENIED: {
+    message: 'Permissions denied',
+    statusCode: 403,
+  },
+  UPDATE_RECIPE: {
+    message: 'An error ocurred updating the recipe',
+    statusCode: 500,
+  },
 };

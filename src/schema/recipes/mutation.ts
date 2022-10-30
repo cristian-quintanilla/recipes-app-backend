@@ -1,6 +1,6 @@
 import { GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLList, GraphQLID } from 'graphql';
 
-import { newRecipe } from './resolvers';
+import { editRecipe, newRecipe } from './resolvers';
 import { IngredientInputType, RecipeType, StepInputType } from './types';
 
 export const createRecipe = {
@@ -19,5 +19,25 @@ export const createRecipe = {
   },
   resolve: (_parent: any, args: any, context: any) => {
     return newRecipe(args, context);
+  }
+}
+
+export const updateRecipe = {
+  type: RecipeType,
+  description: 'Update a recipe',
+  args: {
+    recipeId: { type: new GraphQLNonNull(GraphQLID) },
+    name: { type: GraphQLString },
+    description: { type: GraphQLString },
+    timePreparation:  { type: GraphQLString },
+    timeCooking: { type: GraphQLString },
+    servings: { type: GraphQLInt },
+    ingredients: { type: new GraphQLList(IngredientInputType) },
+    steps: { type: new GraphQLList(StepInputType)  },
+    imageUrl: { type: GraphQLString },
+    category: { type: GraphQLID },
+  },
+  resolve: (_parent: any, args: any, context: any) => {
+    return editRecipe(args, context);
   }
 }
