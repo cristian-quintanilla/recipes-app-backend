@@ -1,6 +1,6 @@
 import { GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLList, GraphQLID } from 'graphql';
 
-import { editRecipe, newRecipe } from './resolvers';
+import { editRecipe, newRecipe, removeRecipe } from './resolvers';
 import { IngredientInputType, RecipeType, StepInputType } from './types';
 
 export const createRecipe = {
@@ -39,5 +39,16 @@ export const updateRecipe = {
   },
   resolve: (_parent: any, args: any, context: any) => {
     return editRecipe(args, context);
+  }
+}
+
+export const deleteRecipe = {
+  type: RecipeType,
+  description: 'Delete a recipe',
+  args: {
+    recipeId: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  resolve: (_parent: any, args: any, context: any) => {
+    return removeRecipe(args, context);
   }
 }
