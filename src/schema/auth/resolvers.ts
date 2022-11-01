@@ -3,7 +3,8 @@ import bcryptjs from 'bcryptjs';
 import User from '../../models/User';
 import generateJWT from '../../utils/generate-jwt';
 import { errorName } from './../../constants';
-import { validateID, validateToken } from '../../utils/validate-token';
+import { validateID } from '../../utils/validate-token';
+import { deleteRecipesByUser } from '../recipes/resolvers';
 
 import {
   AuthLoginInterface,
@@ -159,13 +160,9 @@ export const deleteUser = async (context: any) => {
   const id = validateID(context);
 
   if (id || id !== 'Error: INVALID_TOKEN') {
-    const user = await User.findByIdAndDelete(id);
+    await User.findByIdAndDelete(id);
+    await deleteRecipesByUser(id as string);
 
-    if (!user) {
-      return new Error(errorName.USER_NOT_FOUND);
-    }
-
-    // TODO: Delete user categories and recipes
     return {
       message: 'Account deleted successfully'
     };

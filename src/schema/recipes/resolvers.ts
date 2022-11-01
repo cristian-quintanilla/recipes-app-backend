@@ -70,3 +70,7 @@ export const removeRecipe = async (args: any, context: any) => {
     }
   }
 }
+
+export const deleteRecipesByUser = async (userId: string) => {
+  return Recipe.deleteMany({ user: userId }).exec();
+}
