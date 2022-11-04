@@ -9,7 +9,7 @@ import { createCategory } from './categories/mutation';
 import { categories } from './categories/query';
 
 // Recipes
-import { createRecipe, deleteRecipe, updateRecipe } from './recipes/mutation';
+import { commentRecipe, createRecipe, deleteRecipe, updateRecipe } from './recipes/mutation';
 
 export const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
@@ -26,6 +26,7 @@ export const schema = new GraphQLSchema({
       createCategory,
 
       // Recipes
+      commentRecipe,
       createRecipe,
       deleteRecipe,
       updateRecipe,

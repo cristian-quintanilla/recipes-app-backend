@@ -74,3 +74,25 @@ export const removeRecipe = async (args: any, context: any) => {
 export const deleteRecipesByUser = async (userId: string) => {
   return Recipe.deleteMany({ user: userId }).exec();
 }
+
+export const addComment = async (args: any, context: any) => {
+  const { recipeId, comment } = args;
+  const id = validateID(context);
+
+  // Verify if the recipe exists
+  let recipe = await Recipe.findById(recipeId);
+
+  if (!recipe) {
+    return new Error(errorName.RECIPE_NOT_FOUND);
+  }
+
+  // Validate comment length
+  if (comment.length > 250) {
+    return new Error(errorName.COMMENT_LENGTH);
+  }
+
+  // Add comment
+  recipe.comments.push({ user: id as string, comment });
+  recipe.save();
+  return recipe.comments[recipe.comments.length - 1];
+}

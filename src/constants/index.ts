@@ -11,6 +11,7 @@ export const errorName = {
   UPDATE_RECIPE: 'UPDATE_RECIPE',
   RECIPE_NOT_FOUND: 'RECIPE_NOT_FOUND',
   PERMISSIONS_DENIED: 'PERMISSIONS_DENIED',
+  COMMENT_LENGTH: 'COMMENT_LENGTH'
 }
 
 export const errorType = {
@@ -62,4 +63,8 @@ export const errorType = {
     message: 'An error ocurred updating the recipe',
     statusCode: 500,
   },
+  COMMENT_LENGTH: {
+    message: 'Comment must be less than 250 characters',
+    statusCode: 400,
+  }
 };

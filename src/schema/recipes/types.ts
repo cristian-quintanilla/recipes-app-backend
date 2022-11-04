@@ -46,7 +46,14 @@ export const CommentType = new GraphQLObjectType({
   fields: () => ({
     comment: { type: GraphQLString },
     date: { type: DateResolver },
-    user: { type: UserType },
+    user: {
+      type: UserType,
+      resolve(parent, _args) {
+        // Parent gets the recipe found
+        const user = User.findById(parent.user);
+        return user;
+      }
+    }
   })
 });
 
