@@ -57,6 +57,22 @@ export const CommentType = new GraphQLObjectType({
   })
 });
 
+export const LikeType = new GraphQLObjectType({
+  name: 'Like',
+  description: 'A single like object',
+  fields: () => ({
+    date: { type: DateResolver },
+    user: {
+      type: UserType,
+      resolve(parent, _args) {
+        // Parent gets the recipe found
+        const user = User.findById(parent.user);
+        return user;
+      }
+    }
+  })
+});
+
 export const RecipeType = new GraphQLObjectType({
   name: 'Recipe',
   description: 'Recipe information',
@@ -66,7 +82,7 @@ export const RecipeType = new GraphQLObjectType({
     id: { type: GraphQLID },
     imageUrl: { type: GraphQLString },
     ingredients: { type: new GraphQLList(IngredientType) },
-    likes: { type: GraphQLInt },
+    likes: { type: new GraphQLList(LikeType) },
     name: { type: GraphQLString },
     servings: { type: GraphQLInt },
     steps: { type: new GraphQLList(StepType) },

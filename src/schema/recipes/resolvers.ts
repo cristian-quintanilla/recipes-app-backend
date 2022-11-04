@@ -96,3 +96,30 @@ export const addComment = async (args: any, context: any) => {
   recipe.save();
   return recipe.comments[recipe.comments.length - 1];
 }
+
+export const addLike = async (args: any, context: any) => {
+  const { recipeId } = args;
+  const id = validateID(context);
+
+  // Verify if the recipe exists
+  let recipe = await Recipe.findById(recipeId);
+
+  if (!recipe) {
+    return new Error(errorName.RECIPE_NOT_FOUND);
+  }
+
+  // User has already vote
+  if (recipe.likes.some(like => like.user.toString() === id!.toString())) {
+    return new Error(errorName.USER_VOTED);
+  }
+
+  // User is same as author
+  if (recipe.user.toString() === id) {
+    return new Error(errorName.USER_VOTE_SAME);
+  }
+
+  // Add like
+  recipe.likes.push({ user: id as string });
+  recipe.save();
+  return recipe;
+}

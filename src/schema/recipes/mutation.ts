@@ -1,6 +1,6 @@
 import { GraphQLString, GraphQLNonNull, GraphQLInt, GraphQLList, GraphQLID } from 'graphql';
 
-import { addComment, editRecipe, newRecipe, removeRecipe } from './resolvers';
+import { addLike, addComment, editRecipe, newRecipe, removeRecipe } from './resolvers';
 import { IngredientInputType, RecipeType, StepInputType, CommentType } from './types';
 
 export const createRecipe = {
@@ -62,5 +62,16 @@ export const commentRecipe = {
   },
   resolve: (_parent: any, args: any, context: any) => {
     return addComment(args, context);
+  }
+}
+
+export const likeRecipe = {
+  type: RecipeType,
+  description: 'Add like to a recipe',
+  args: {
+    recipeId: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  resolve: (_parent: any, args: any, context: any) => {
+    return addLike(args, context);
   }
 }
