@@ -137,10 +137,12 @@ export const getRecipes = async (args: any) => {
   const recipes = await Recipe.find(filters)
   .limit(Number(size))
   .skip((Number(page) - 1) * Number(size))
-  .populate([
-    { path: 'category', select: 'name' },
-    { path: 'user', select: 'name email' }
-  ]).sort({ createdAt: -1 });
+  .sort({ createdAt: -1 });
 
   return recipes;
+}
+
+export const getRecipe = async ({ recipeId }: any) => {
+  const recipe = await Recipe.findById(recipeId);
+  return recipe ? recipe :  new Error(errorName.RECIPE_NOT_FOUND);
 }

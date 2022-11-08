@@ -1,6 +1,6 @@
-import { GraphQLInt, GraphQLList, GraphQLString } from 'graphql';
+import { GraphQLInt, GraphQLList, GraphQLString, GraphQLID, GraphQLNonNull } from 'graphql';
 
-import { getRecipes } from './resolvers';
+import { getRecipe, getRecipes } from './resolvers';
 import { RecipeType } from './types';
 
 export const recipes = {
@@ -13,5 +13,16 @@ export const recipes = {
   },
   resolve: (_parent: any, args: any) => {
     return getRecipes(args);
+  }
+}
+
+export const recipe = {
+  type: RecipeType,
+  description: 'Get one recipe by id',
+  args: {
+    recipeId: { type: new GraphQLNonNull(GraphQLID) },
+  },
+  resolve: (_parent: any, args: any) => {
+    return getRecipe(args);
   }
 }
