@@ -1,6 +1,6 @@
 import { GraphQLInt, GraphQLList, GraphQLString, GraphQLID, GraphQLNonNull } from 'graphql';
 
-import { getRecipe, getRecipes } from './resolvers';
+import { getMostLikedRecipes, getRecipe, getRecipes } from './resolvers';
 import { RecipeType } from './types';
 
 export const recipes = {
@@ -24,5 +24,13 @@ export const recipe = {
   },
   resolve: (_parent: any, args: any) => {
     return getRecipe(args);
+  }
+}
+
+export const mostLikedRecipes = {
+  type: new GraphQLList(RecipeType),
+  description: 'Get most liked recipes in the month',
+  resolve: (_parent: any, _args: any) => {
+    return getMostLikedRecipes();
   }
 }

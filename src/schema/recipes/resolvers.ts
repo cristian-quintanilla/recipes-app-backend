@@ -146,3 +146,18 @@ export const getRecipe = async ({ recipeId }: any) => {
   const recipe = await Recipe.findById(recipeId);
   return recipe ? recipe :  new Error(errorName.RECIPE_NOT_FOUND);
 }
+
+export const getMostLikedRecipes = async () => {
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+
+  const recipes = await Recipe.find({
+    'likes.date': {
+      $gte: firstDay,
+      $lte: lastDay
+    }
+  }).sort({ likes: -1 }).limit(5);
+
+  return recipes;
+}
