@@ -78,7 +78,7 @@ export const login = async ({ email, password }: AuthLoginInterface) => {
 export const getLoggedUser = async (context: any) => {
   const id = validateID(context);
 
-  if (id || id !== 'Error: INVALID_TOKEN') {
+  if (!id?.toString().includes('INVALID_TOKEN')) {
     const user = await User.findById(id);
     return user;
   } else {
@@ -101,7 +101,7 @@ export const editUser = async (context: any, args: UpdateAccountInterface) => {
   const id = validateID(context);
 
   // Validate user
-  if (id || id !== 'Error: INVALID_TOKEN') {
+  if (!id?.toString().includes('INVALID_TOKEN')) {
     const user = await User.findById(id);
 
     if (!user) {
@@ -131,7 +131,7 @@ export const editUser = async (context: any, args: UpdateAccountInterface) => {
 export const passwordUpdate = async (context: any, { password }: any) => {
   const id = validateID(context);
 
-  if (id || id !== 'Error: INVALID_TOKEN') {
+  if (!id?.toString().includes('INVALID_TOKEN')) {
     const user = await User.findById(id);
 
     if (!user) {
@@ -159,7 +159,7 @@ export const passwordUpdate = async (context: any, { password }: any) => {
 export const deleteUser = async (context: any) => {
   const id = validateID(context);
 
-  if (id || id !== 'Error: INVALID_TOKEN') {
+  if (!id?.toString().includes('INVALID_TOKEN')) {
     await User.findByIdAndDelete(id);
     await deleteRecipesByUser(id as string);
 

@@ -6,7 +6,7 @@ export const newRecipe = async (args: any, context: any) => {
   const id = validateID(context);
 
   // Validate user
-  if (id || id !== 'Error: INVALID_TOKEN') {
+  if (!id?.toString().includes('INVALID_TOKEN')) {
     try {
       const recipe = Recipe.create({
         ...args,
@@ -122,4 +122,25 @@ export const addLike = async (args: any, context: any) => {
   recipe.likes.push({ user: id as string });
   recipe.save();
   return recipe;
+}
+
+export const getRecipes = async (args: any) => {
+  const { page, size, search } = args;
+
+  let filters = search ? {
+    $or: [
+      { name: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } },
+    ]
+  } : {};
+
+  const recipes = await Recipe.find(filters)
+  .limit(Number(size))
+  .skip((Number(page) - 1) * Number(size))
+  .populate([
+    { path: 'category', select: 'name' },
+    { path: 'user', select: 'name email' }
+  ]).sort({ createdAt: -1 });
+
+  return recipes;
 }

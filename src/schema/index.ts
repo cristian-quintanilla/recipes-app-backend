@@ -10,6 +10,7 @@ import { categories } from './categories/query';
 
 // Recipes
 import { commentRecipe, createRecipe, deleteRecipe, likeRecipe, updateRecipe } from './recipes/mutation';
+import { recipes } from './recipes/query';
 
 export const schema = new GraphQLSchema({
   mutation: new GraphQLObjectType({
@@ -42,6 +43,9 @@ export const schema = new GraphQLSchema({
 
       // Categories
       categories,
+
+      // Recipes
+      recipes,
     },
   }),
 });

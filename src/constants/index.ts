@@ -6,6 +6,7 @@ export const errorName = {
   INVALID_TOKEN: 'INVALID_TOKEN',
   PERMISSIONS_DENIED: 'PERMISSIONS_DENIED',
   RECIPE_NOT_FOUND: 'RECIPE_NOT_FOUND',
+  RECIPES_ERROR: 'RECIPES_ERROR',
   SERVER_ERROR: 'SERVER_ERROR',
   UPDATE_PASSWORD: 'UPDATE_PASSWORD',
   UPDATE_RECIPE: 'UPDATE_RECIPE',
@@ -44,6 +45,10 @@ export const errorType = {
   RECIPE_NOT_FOUND: {
     message: 'Recipe not found',
     statusCode: 404,
+  },
+  RECIPES_ERROR: {
+    message: 'An error ocurred getting the recipes',
+    statusCode: 500,
   },
   SERVER_ERROR: {
     message: 'Error creating the user',
