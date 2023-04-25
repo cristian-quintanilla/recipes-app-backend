@@ -2,7 +2,7 @@ import { GraphQLSchema, GraphQLObjectType } from 'graphql';
 
 // Account
 import { authLogin, createAccount, deleteAccount, updateAccount, updatePassword } from './auth/mutation';
-import { getMe, getUser } from './auth/query';
+import { getMe, getUser, renewToken } from './auth/query';
 
 // Categories
 import { createCategory } from './categories/mutation';
@@ -40,6 +40,7 @@ export const schema = new GraphQLSchema({
       // User
       getMe,
       getUser,
+      renewToken,
 
       // Categories
       categories,

@@ -170,3 +170,32 @@ export const deleteUser = async (context: any) => {
     return new Error(errorName.USER_NOT_FOUND);
   }
 }
+
+export const renew = async (context: any) => {
+  try {
+    const id = validateID(context);
+
+    if (!id?.toString().includes('INVALID_TOKEN')) {
+      const user = await User.findById(id);
+
+      if (!user) {
+        return new Error(errorName.USER_NOT_FOUND);
+      }
+
+      const payload: DataStoredInToken = {
+        user: {
+          _id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      };
+
+      const token = await generateJWT(payload);
+      return { token, message: 'Logged in successfully' };
+    } else {
+      return new Error(errorName.USER_NOT_FOUND);
+    }
+  } catch (_err) {
+    return new Error(errorName.SERVER_ERROR);
+  }
+};

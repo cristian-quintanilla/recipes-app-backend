@@ -1,7 +1,7 @@
-import { GraphQLID, GraphQLNonNull } from 'graphql';
+import { GraphQLID, GraphQLNonNull, GraphQLString } from 'graphql';
 
-import { UserType } from './types';
-import { getLoggedUser, getProfile } from './resolvers';
+import { AuthType, UserType } from './types';
+import { getLoggedUser, getProfile, renew } from './resolvers';
 
 export const getMe = {
   type: UserType,
@@ -19,5 +19,13 @@ export const getUser = {
   },
   resolve: (_parent: any, args: any) => {
     return getProfile(args);
+  }
+}
+
+export const renewToken = {
+  type: AuthType,
+  description: 'Renew Token',
+  resolve: (_parent: any, _args: any, context: any) => {
+    return renew(context);
   }
 }
