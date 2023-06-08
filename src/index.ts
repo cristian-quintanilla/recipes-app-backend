@@ -22,7 +22,7 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true,
   customFormatErrorFn: (err) => {
     if (err) {
-      const error = getErrorCode(err.message);
+      const error = getErrorCode(err?.message) || { message: err };
       return ({ message: error.message, statusCode: error.statusCode });
     } else {
       return({ message: err, statusCode: 500 });
