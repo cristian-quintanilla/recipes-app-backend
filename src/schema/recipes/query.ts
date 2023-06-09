@@ -11,8 +11,8 @@ export const recipes = {
     size: { type: GraphQLInt },
     substring: { type: GraphQLString },
   },
-  resolve: (_parent: any, args: any) => {
-    return getRecipes(args);
+  resolve: (_parent: any, args: any, context: any) => {
+    return getRecipes(args, context);
   }
 }
 
@@ -22,15 +22,15 @@ export const recipe = {
   args: {
     recipeId: { type: new GraphQLNonNull(GraphQLID) },
   },
-  resolve: (_parent: any, args: any) => {
-    return getRecipe(args);
+  resolve: (_parent: any, args: any, context: any) => {
+    return getRecipe(args, context);
   }
 }
 
 export const mostLikedRecipes = {
   type: new GraphQLList(RecipeType),
   description: 'Get most liked recipes in the month',
-  resolve: (_parent: any, _args: any) => {
-    return getMostLikedRecipes();
+  resolve: (_parent: any, _args: any, context: any) => {
+    return getMostLikedRecipes(context);
   }
 }

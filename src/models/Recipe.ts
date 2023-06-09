@@ -17,6 +17,7 @@ interface Recipe extends mongoose.Document {
   likes: Like[];
   commentsCount?: number;
   likesCount?: number;
+  userLiked?: boolean;
 }
 
 const RecipeSchema = new Schema({

@@ -64,6 +64,7 @@ export interface Recipe {
   user: User;
   commentsCount?: number;
   likesCount?: number;
+  userLiked?: boolean;
 }
 
 export interface Comment {

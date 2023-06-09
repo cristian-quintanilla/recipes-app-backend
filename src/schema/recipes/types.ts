@@ -6,6 +6,7 @@ import {
   GraphQLObjectType,
   GraphQLString,
   GraphQLNonNull,
+  GraphQLBoolean,
 } from 'graphql';
 import { DateResolver } from 'graphql-scalars';
 
@@ -98,6 +99,7 @@ export const RecipeType = new GraphQLObjectType({
     steps: { type: new GraphQLList(StepType) },
     timeCooking: { type: GraphQLString },
     timePreparation: { type: GraphQLString },
+    userLiked: { type: GraphQLBoolean },
     category: {
       type: CategoryType,
       resolve(parent, _args) {

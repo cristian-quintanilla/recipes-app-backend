@@ -124,8 +124,9 @@ export const addLike = async (args: any, context: any) => {
   return recipe;
 }
 
-export const getRecipes = async (args: any) => {
+export const getRecipes = async (args: any, context: any) => {
   const { page, size, substring } = args;
+  const id = validateID(context);
 
   let filters = substring ? {
     $or: [
@@ -143,6 +144,7 @@ export const getRecipes = async (args: any) => {
     data.map((recipe: any) => {
       recipe.commentsCount = recipe.comments.length || 0;
       recipe.likesCount = recipe.likes.length || 0;
+      recipe.userLiked = recipe.likes.some((like: any) => like.user?._id.toString() === id);
 
       return recipe;
     });
@@ -153,29 +155,28 @@ export const getRecipes = async (args: any) => {
   return recipes;
 }
 
-export const getRecipe = async ({ recipeId }: any) => {
+export const getRecipe = async ({ recipeId }: any, context: any) => {
   let recipe = await Recipe.findById(recipeId);
+  const id = validateID(context);
 
   if (recipe) {
     recipe.commentsCount = recipe.comments.length || 0;
     recipe.likesCount = recipe.likes.length || 0;
+    recipe.userLiked = recipe.likes.some((like: any) => like.user?._id.toString() === id);
   }
 
   return recipe ? recipe : new Error(errorName.RECIPE_NOT_FOUND);
 }
 
-export const getMostLikedRecipes = async () => {
-  const now = new Date();
-  // const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  // const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
-  // find({ 'likes.date': { $gte: firstDay, $lte: lastDay } });
-
+export const getMostLikedRecipes = async (context: any) => {
+  const id = validateID(context);
   let recipes: any[] = [];
 
   await Recipe.find().sort({ likes: -1 }).limit(5).then((data: any) => {
     data.map((recipe: any) => {
       recipe.commentsCount = recipe.comments.length || 0;
       recipe.likesCount = recipe.likes.length || 0;
+      recipe.userLiked = recipe.likes.some((like: any) => like.user?._id.toString() === id);
 
       return recipe;
     });
