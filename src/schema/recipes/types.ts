@@ -1,4 +1,12 @@
-import { GraphQLID, GraphQLInputObjectType, GraphQLInt, GraphQLList, GraphQLObjectType, GraphQLString, GraphQLNonNull } from 'graphql';
+import {
+  GraphQLID,
+  GraphQLInputObjectType,
+  GraphQLInt,
+  GraphQLList,
+  GraphQLObjectType,
+  GraphQLString,
+  GraphQLNonNull,
+} from 'graphql';
 import { DateResolver } from 'graphql-scalars';
 
 import { CategoryType } from '../categories/types';
@@ -10,16 +18,16 @@ export const IngredientType = new GraphQLObjectType({
   name: 'Ingredient',
   description: 'A single ingredient object',
   fields: () => ({
-    name: { type: GraphQLString }
-  })
+    name: { type: GraphQLString },
+  }),
 });
 
 export const IngredientInputType = new GraphQLInputObjectType({
   name: 'IngredientInput',
   description: 'A single ingredient input object',
   fields: () => ({
-    name: { type: new GraphQLNonNull(GraphQLString) }
-  })
+    name: { type: new GraphQLNonNull(GraphQLString) },
+  }),
 });
 
 export const StepType = new GraphQLObjectType({
@@ -28,7 +36,7 @@ export const StepType = new GraphQLObjectType({
   fields: () => ({
     step: { type: GraphQLInt },
     description: { type: GraphQLString },
-  })
+  }),
 });
 
 export const StepInputType = new GraphQLInputObjectType({
@@ -37,7 +45,7 @@ export const StepInputType = new GraphQLInputObjectType({
   fields: () => ({
     step: { type: new GraphQLNonNull(GraphQLInt) },
     description: { type: new GraphQLNonNull(GraphQLString) },
-  })
+  }),
 });
 
 export const CommentType = new GraphQLObjectType({
@@ -52,9 +60,9 @@ export const CommentType = new GraphQLObjectType({
         // Parent gets the recipe found
         const user = User.findById(parent.user);
         return user;
-      }
-    }
-  })
+      },
+    },
+  }),
 });
 
 export const LikeType = new GraphQLObjectType({
@@ -68,9 +76,9 @@ export const LikeType = new GraphQLObjectType({
         // Parent gets the recipe found
         const user = User.findById(parent.user);
         return user;
-      }
-    }
-  })
+      },
+    },
+  }),
 });
 
 export const RecipeType = new GraphQLObjectType({
@@ -78,11 +86,13 @@ export const RecipeType = new GraphQLObjectType({
   description: 'Recipe information',
   fields: () => ({
     comments: { type: new GraphQLList(CommentType) },
+    commentsCount: { type: GraphQLInt },
     description: { type: GraphQLString },
     id: { type: GraphQLID },
     imageUrl: { type: GraphQLString },
     ingredients: { type: new GraphQLList(IngredientType) },
     likes: { type: new GraphQLList(LikeType) },
+    likesCount: { type: GraphQLInt },
     name: { type: GraphQLString },
     servings: { type: GraphQLInt },
     steps: { type: new GraphQLList(StepType) },
@@ -94,7 +104,7 @@ export const RecipeType = new GraphQLObjectType({
         // Parent gets the recipe found
         const category = Category.findById(parent.category);
         return category;
-      }
+      },
     },
     user: {
       type: UserType,
@@ -102,7 +112,7 @@ export const RecipeType = new GraphQLObjectType({
         // Parent gets the recipe found
         const user = User.findById(parent.user);
         return user;
-      }
-    }
+      },
+    },
   }),
 });

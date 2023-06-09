@@ -9,7 +9,7 @@ export const recipes = {
   args: {
     page: { type: GraphQLInt },
     size: { type: GraphQLInt },
-    search: { type: GraphQLString },
+    substring: { type: GraphQLString },
   },
   resolve: (_parent: any, args: any) => {
     return getRecipes(args);

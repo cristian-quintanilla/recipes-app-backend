@@ -62,6 +62,8 @@ export interface Recipe {
   imageUrl?: string;
   category: Category;
   user: User;
+  commentsCount?: number;
+  likesCount?: number;
 }
 
 export interface Comment {

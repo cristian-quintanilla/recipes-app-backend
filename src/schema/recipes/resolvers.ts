@@ -125,39 +125,63 @@ export const addLike = async (args: any, context: any) => {
 }
 
 export const getRecipes = async (args: any) => {
-  const { page, size, search } = args;
+  const { page, size, substring } = args;
 
-  let filters = search ? {
+  let filters = substring ? {
     $or: [
-      { name: { $regex: search, $options: 'i' } },
-      { description: { $regex: search, $options: 'i' } },
+      { name: { $regex: substring, $options: 'i' } },
+      { description: { $regex: substring, $options: 'i' } },
     ]
   } : {};
 
-  const recipes = await Recipe.find(filters)
+  let recipes: any[] = [];
+
+  await Recipe.find(filters)
   .limit(Number(size))
   .skip((Number(page) - 1) * Number(size))
-  .sort({ createdAt: -1 });
+  .sort({ createdAt: -1 }).then((data: any) => {
+    data.map((recipe: any) => {
+      recipe.commentsCount = recipe.comments.length || 0;
+      recipe.likesCount = recipe.likes.length || 0;
+
+      return recipe;
+    });
+
+    recipes = data;
+  });
 
   return recipes;
 }
 
 export const getRecipe = async ({ recipeId }: any) => {
-  const recipe = await Recipe.findById(recipeId);
-  return recipe ? recipe :  new Error(errorName.RECIPE_NOT_FOUND);
+  let recipe = await Recipe.findById(recipeId);
+
+  if (recipe) {
+    recipe.commentsCount = recipe.comments.length || 0;
+    recipe.likesCount = recipe.likes.length || 0;
+  }
+
+  return recipe ? recipe : new Error(errorName.RECIPE_NOT_FOUND);
 }
 
 export const getMostLikedRecipes = async () => {
   const now = new Date();
-  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  // const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  // const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  // find({ 'likes.date': { $gte: firstDay, $lte: lastDay } });
 
-  const recipes = await Recipe.find({
-    'likes.date': {
-      $gte: firstDay,
-      $lte: lastDay
-    }
-  }).sort({ likes: -1 }).limit(5);
+  let recipes: any[] = [];
+
+  await Recipe.find().sort({ likes: -1 }).limit(5).then((data: any) => {
+    data.map((recipe: any) => {
+      recipe.commentsCount = recipe.comments.length || 0;
+      recipe.likesCount = recipe.likes.length || 0;
+
+      return recipe;
+    });
+
+    recipes = data;
+  });
 
   return recipes;
 }

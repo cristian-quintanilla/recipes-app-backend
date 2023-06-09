@@ -15,6 +15,8 @@ interface Recipe extends mongoose.Document {
   user: User;
   comments: Comment[];
   likes: Like[];
+  commentsCount?: number;
+  likesCount?: number;
 }
 
 const RecipeSchema = new Schema({
@@ -60,6 +62,12 @@ const RecipeSchema = new Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User'
+  },
+  commentsCount: {
+    type: Number,
+  },
+  likesCount: {
+    type: Number,
   },
   comments: [{
     comment: String,
