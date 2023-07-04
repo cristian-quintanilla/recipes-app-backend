@@ -152,7 +152,12 @@ export const getRecipes = async (args: any, context: any) => {
     recipes = data;
   });
 
-  return recipes;
+  const count = (await Recipe.find()).length;
+
+  return {
+    count,
+    recipes
+  };
 }
 
 export const getRecipe = async ({ recipeId }: any, context: any) => {

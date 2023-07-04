@@ -118,3 +118,12 @@ export const RecipeType = new GraphQLObjectType({
     },
   }),
 });
+
+export const RecipeTableType = new GraphQLObjectType({
+  name: 'RecipeTableType',
+  description: 'Recipes Table',
+  fields: () => ({
+    count: { type: GraphQLInt },
+    recipes: { type: new GraphQLList(RecipeType) },
+  })
+});

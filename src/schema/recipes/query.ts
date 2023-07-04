@@ -1,10 +1,10 @@
 import { GraphQLInt, GraphQLList, GraphQLString, GraphQLID, GraphQLNonNull } from 'graphql';
 
 import { getMostLikedRecipes, getRecipe, getRecipes } from './resolvers';
-import { RecipeType } from './types';
+import { RecipeTableType, RecipeType } from './types';
 
 export const recipes = {
-  type: new GraphQLList(RecipeType),
+  type: RecipeTableType,
   description: 'Get all recipes paginated',
   args: {
     page: { type: GraphQLInt },
