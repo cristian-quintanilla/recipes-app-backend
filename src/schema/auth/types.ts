@@ -14,11 +14,11 @@ export const UserType: GraphQLObjectType = new GraphQLObjectType({
     imageUrl: { type: GraphQLString },
     name: { type: GraphQLString },
     password: { type: GraphQLString },
-    lastRecipes: {
+    recipes: {
       type: new GraphQLList(RecipeType),
       resolve(parent, _args) {
         // Parent gets the user found
-        return Recipe.find({ user: parent._id }).sort({ createdAt: -1 }).limit(3);
+        return Recipe.find({ user: parent._id }).sort({ createdAt: -1 });
       }
     },
   }),
