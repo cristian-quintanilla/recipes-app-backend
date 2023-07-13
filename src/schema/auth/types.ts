@@ -21,6 +21,13 @@ export const UserType: GraphQLObjectType = new GraphQLObjectType({
         return Recipe.find({ user: parent._id }).sort({ createdAt: -1 });
       }
     },
+    totalRecipes: {
+      type: GraphQLInt,
+      async resolve(parent, _args) {
+        // Parent gets the user found
+        return (await Recipe.find({ user: parent._id })).length;
+      }
+    },
   }),
 });
 
