@@ -69,7 +69,12 @@ export const login = async ({ email, password }: AuthLoginInterface) => {
     };
 
     const token = await generateJWT(payload);
-    return { token, message: 'Logged in successfully' };
+
+    return {
+      token,
+      user: payload.user,
+      message: 'Logged in successfully'
+    };
   } catch (_err) {
     return new Error(errorName.SERVER_ERROR);
   }

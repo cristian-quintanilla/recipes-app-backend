@@ -37,5 +37,6 @@ export const AuthType = new GraphQLObjectType({
   fields: () => ({
     token: { type: GraphQLString },
     message: { type: GraphQLString },
+    user: { type: UserType },
   }),
 });

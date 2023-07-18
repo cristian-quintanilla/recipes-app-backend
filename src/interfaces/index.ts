@@ -1,5 +1,3 @@
-import { Request } from 'express';
-
 export interface DataStoredInToken {
 	user?: {
 		_id: string;
@@ -24,6 +22,7 @@ export interface UpdateAccountInterface {
 export interface AuthLoginInterface {
   email: string;
   password: string;
+	user: User;
 }
 
 export interface User {
