@@ -196,7 +196,12 @@ export const renew = async (context: any) => {
       };
 
       const token = await generateJWT(payload);
-      return { token, message: 'Logged in successfully' };
+
+      return {
+        token,
+        user: payload.user,
+        message: 'Logged in successfully'
+      };
     } else {
       return new Error(errorName.USER_NOT_FOUND);
     }
