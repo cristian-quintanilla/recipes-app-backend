@@ -8,7 +8,7 @@ import {
   GraphQLNonNull,
   GraphQLBoolean,
 } from 'graphql';
-import { DateResolver } from 'graphql-scalars';
+import { DateTimeResolver } from 'graphql-scalars';
 
 import { CategoryType } from '../categories/types';
 import { UserType } from '../auth/types';
@@ -54,7 +54,7 @@ export const CommentType = new GraphQLObjectType({
   description: 'A single comment object',
   fields: () => ({
     comment: { type: GraphQLString },
-    date: { type: DateResolver },
+    date: { type: DateTimeResolver },
     user: {
       type: UserType,
       resolve(parent, _args) {
@@ -70,7 +70,7 @@ export const LikeType = new GraphQLObjectType({
   name: 'Like',
   description: 'A single like object',
   fields: () => ({
-    date: { type: DateResolver },
+    date: { type: DateTimeResolver },
     user: {
       type: UserType,
       resolve(parent, _args) {
